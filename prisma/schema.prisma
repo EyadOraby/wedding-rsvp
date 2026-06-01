@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model SiteSettings {
+  id             String   @id @default("default")
+  initials       String   @default("J & Y")
+  coupleNames    String   @default("JORDAN & YOSSEF")
+  weddingDate    String   @default("NOVEMBER 21, 2026")
+  location       String   @default("FRANSCHHOEK, SOUTH AFRICA")
+  heroImageUrl   String?
+  rsvpHeading    String   @default("RSVP")
+  bankingHeading String   @default("GIFTING")
+  updatedAt      DateTime @updatedAt
+}
+
+model MealOption {
+  id          String  @id @default(cuid())
+  title       String
+  description String
+  tag         String?
+  sortOrder   Int     @default(0)
+  active      Boolean @default(true)
+  rsvps       Rsvp[]
+}
+
+model DietaryOption {
+  id        String  @id @default(cuid())
+  label     String
+  sortOrder Int     @default(0)
+  active    Boolean @default(true)
+}
+
+model BankingInfo {
+  id            String   @id @default("default")
+  accountName   String
+  bankName      String
+  accountNumber String
+  branchCode    String
+  notes         String?
+  active        Boolean  @default(true)
+  updatedAt     DateTime @updatedAt
+}
+
+model Rsvp {
+  id            String      @id @default(cuid())
+  guestName     String
+  email         String?
+  attending     Boolean
+  guestCount    Int         @default(1)
+  mealOptionId  String?
+  mealOption    MealOption? @relation(fields: [mealOptionId], references: [id], onDelete: SetNull)
+  dietaryLabels String[]
+  dietaryOther  String?
+  message       String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}

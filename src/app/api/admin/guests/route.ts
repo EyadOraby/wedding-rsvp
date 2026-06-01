@@ -1,0 +1,20 @@
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/db";
+
+export async function GET() {
+  const guests = await prisma.rsvp.findMany({
+    include: { mealOption: true },
+    orderBy: { createdAt: "desc" },
+  });
+  return NextResponse.json(guests);
+}
+
+export async function DELETE(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get("id");
+  if (!id) {
+    return NextResponse.json({ error: "Missing id" }, { status: 400 });
+  }
+  await prisma.rsvp.delete({ where: { id } });
+  return NextResponse.json({ success: true });
+}
