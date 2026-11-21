@@ -56,7 +56,7 @@ export const TEMPLATES: Record<EventType, Template> = {
         time: "16:00",
         intro: "We would love for you to celebrate with us.",
       },
-      theme: { id: "classic", accent: "" },
+      theme: { id: "classic", accent: "", layout: "centered" },
       sections: [
         {
           id: "sec_story",
@@ -163,7 +163,7 @@ export const TEMPLATES: Record<EventType, Template> = {
         time: "19:00",
         intro: "Come and celebrate with good food, music and friends.",
       },
-      theme: { id: "sunset", accent: "" },
+      theme: { id: "sunset", accent: "", layout: "cover" },
       sections: [
         {
           id: "sec_countdown",
@@ -224,7 +224,7 @@ export const TEMPLATES: Record<EventType, Template> = {
         time: "21:00",
         intro: "Let's see the year out together.",
       },
-      theme: { id: "midnight", accent: "" },
+      theme: { id: "midnight", accent: "", layout: "cover" },
       sections: [
         {
           id: "sec_location",
@@ -274,7 +274,7 @@ export const TEMPLATES: Record<EventType, Template> = {
         time: "14:00",
         intro: "Join us for an afternoon of tea, cake and celebration.",
       },
-      theme: { id: "garden", accent: "" },
+      theme: { id: "garden", accent: "", layout: "split" },
       sections: [
         {
           id: "sec_location",
@@ -325,7 +325,7 @@ export const TEMPLATES: Record<EventType, Template> = {
         time: "09:30",
         intro: "A morning of talks, demos and conversation.",
       },
-      theme: { id: "modern", accent: "" },
+      theme: { id: "modern", accent: "", layout: "split" },
       sections: [
         {
           id: "sec_schedule",
@@ -379,6 +379,341 @@ export const TEMPLATES: Record<EventType, Template> = {
           },
         ],
         thankYouMessage: "You're registered. We'll see you there.",
+      },
+    },
+  },
+
+  engagement: {
+    label: "Engagement party",
+    description: "A relaxed celebration before the big day",
+    title: "Nadia & Karim",
+    content: {
+      version: 1,
+      details: {
+        ...noDetails,
+        headline: "Celebrate the engagement of",
+        time: "19:30",
+        intro: "We said yes! Join us for drinks, dinner and dancing.",
+      },
+      theme: { id: "blush", accent: "", layout: "split" },
+      sections: [
+        {
+          id: "sec_story",
+          type: "story",
+          enabled: true,
+          title: "How it happened",
+          body: "Share the proposal story with your guests.",
+        },
+        {
+          id: "sec_location",
+          type: "location",
+          enabled: true,
+          title: "Where",
+          note: "",
+        },
+        {
+          id: "sec_countdown",
+          type: "countdown",
+          enabled: true,
+          title: "Counting down",
+        },
+        rsvpSection(),
+        {
+          id: "sec_dress",
+          type: "dressCode",
+          enabled: true,
+          title: "Dress code",
+          body: "Cocktail attire.",
+        },
+      ],
+      rsvp: {
+        deadline: "",
+        allowPlusOnes: true,
+        maxGuests: 2,
+        collectEmail: "optional",
+        questions: [
+          {
+            id: "q_afterparty",
+            type: "yesno",
+            label: "Will you join us for the after-party?",
+            required: false,
+            showWhen: "attending",
+          },
+          {
+            id: "q_song",
+            type: "text",
+            label: "A song we should play",
+            required: false,
+            showWhen: "attending",
+          },
+        ],
+        thankYouMessage: "Thank you! We can't wait to celebrate with you.",
+      },
+    },
+  },
+
+  dinnerParty: {
+    label: "Dinner party",
+    description: "An intimate dinner with the menu and dietary needs",
+    title: "Dinner at Rami's",
+    content: {
+      version: 1,
+      details: {
+        ...noDetails,
+        headline: "You're invited to",
+        time: "20:00",
+        intro: "A long table, good food and better company.",
+      },
+      theme: { id: "terracotta", accent: "", layout: "split" },
+      sections: [
+        {
+          id: "sec_story",
+          type: "story",
+          enabled: true,
+          title: "On the menu",
+          body: "Starters to share\nSlow-roasted lamb or stuffed peppers\nOrange blossom cake",
+        },
+        {
+          id: "sec_location",
+          type: "location",
+          enabled: true,
+          title: "Where",
+          note: "",
+        },
+        rsvpSection(),
+      ],
+      rsvp: {
+        deadline: "",
+        allowPlusOnes: true,
+        maxGuests: 2,
+        collectEmail: "off",
+        questions: [
+          {
+            id: "q_main",
+            type: "single",
+            label: "Main course",
+            required: true,
+            showWhen: "attending",
+            options: options("Lamb", "Stuffed peppers (vegetarian)"),
+          },
+          dietaryQuestion,
+          {
+            id: "q_bottle",
+            type: "yesno",
+            label: "Bringing something to drink?",
+            required: false,
+            showWhen: "attending",
+          },
+        ],
+        thankYouMessage: "Lovely, a seat is saved for you.",
+      },
+    },
+  },
+
+  graduation: {
+    label: "Graduation",
+    description: "Ceremony and party, with who comes to which",
+    title: "Lina graduates!",
+    content: {
+      version: 1,
+      details: {
+        ...noDetails,
+        headline: "Class of 2027",
+        time: "17:00",
+        intro: "Four years, one diploma and a party to celebrate it.",
+      },
+      theme: { id: "ocean", accent: "", layout: "cover" },
+      sections: [
+        {
+          id: "sec_schedule",
+          type: "schedule",
+          enabled: true,
+          title: "The day",
+          items: [
+            { time: "14:00", label: "Graduation ceremony", note: "" },
+            { time: "17:00", label: "Party at home", note: "" },
+          ],
+        },
+        {
+          id: "sec_location",
+          type: "location",
+          enabled: true,
+          title: "Where",
+          note: "",
+        },
+        rsvpSection(),
+      ],
+      rsvp: {
+        deadline: "",
+        allowPlusOnes: true,
+        maxGuests: 3,
+        collectEmail: "off",
+        questions: [
+          {
+            id: "q_parts",
+            type: "multi",
+            label: "Which parts will you join?",
+            required: true,
+            showWhen: "attending",
+            options: options("Ceremony", "Party"),
+            allowOther: false,
+          },
+        ],
+        thankYouMessage: "Thank you! See you there.",
+      },
+    },
+  },
+
+  anniversary: {
+    label: "Anniversary",
+    description: "A milestone celebration with dinner choices",
+    title: "Mona & Adel",
+    content: {
+      version: 1,
+      details: {
+        ...noDetails,
+        headline: "25 years of",
+        time: "19:00",
+        intro: "Join us to celebrate a quarter of a century together.",
+      },
+      theme: { id: "deco", accent: "", layout: "centered" },
+      sections: [
+        {
+          id: "sec_story",
+          type: "story",
+          enabled: true,
+          title: "Our story",
+          body: "Married in 2002, still dancing in the kitchen.",
+        },
+        {
+          id: "sec_schedule",
+          type: "schedule",
+          enabled: true,
+          title: "The evening",
+          items: [
+            { time: "19:00", label: "Welcome drinks", note: "" },
+            { time: "20:00", label: "Dinner and speeches", note: "" },
+          ],
+        },
+        {
+          id: "sec_location",
+          type: "location",
+          enabled: true,
+          title: "Where",
+          note: "",
+        },
+        rsvpSection(),
+        {
+          id: "sec_dress",
+          type: "dressCode",
+          enabled: true,
+          title: "Dress code",
+          body: "Black tie optional. A touch of silver is welcome.",
+        },
+      ],
+      rsvp: {
+        deadline: "",
+        allowPlusOnes: true,
+        maxGuests: 2,
+        collectEmail: "optional",
+        questions: [
+          {
+            id: "q_meal",
+            type: "single",
+            label: "Dinner choice",
+            required: true,
+            showWhen: "attending",
+            options: options("Beef", "Fish", "Vegetarian"),
+          },
+          dietaryQuestion,
+        ],
+        thankYouMessage: "Thank you for celebrating with us.",
+      },
+    },
+  },
+
+  meetup: {
+    label: "Meetup",
+    description: "Talks, registration and attendee details",
+    title: "Design & Code Night",
+    content: {
+      version: 1,
+      details: {
+        ...noDetails,
+        headline: "Monthly meetup",
+        time: "18:30",
+        intro: "Two short talks, pizza and plenty of time to meet people.",
+      },
+      theme: { id: "noir", accent: "", layout: "cover" },
+      sections: [
+        {
+          id: "sec_schedule",
+          type: "schedule",
+          enabled: true,
+          title: "Programme",
+          items: [
+            { time: "18:30", label: "Doors open", note: "" },
+            {
+              time: "19:00",
+              label: "Talk: Designing for small screens",
+              note: "",
+            },
+            { time: "19:40", label: "Talk: Shipping side projects", note: "" },
+            { time: "20:20", label: "Pizza and networking", note: "" },
+          ],
+        },
+        {
+          id: "sec_location",
+          type: "location",
+          enabled: true,
+          title: "Venue",
+          note: "",
+        },
+        rsvpSection("Register"),
+        {
+          id: "sec_faq",
+          type: "faq",
+          enabled: true,
+          title: "FAQ",
+          items: [
+            { question: "Is it free?", answer: "Yes, but places are limited." },
+            {
+              question: "Will the talks be recorded?",
+              answer: "Slides are shared afterwards.",
+            },
+          ],
+        },
+      ],
+      rsvp: {
+        deadline: "",
+        allowPlusOnes: false,
+        maxGuests: 1,
+        collectEmail: "required",
+        questions: [
+          {
+            id: "q_role",
+            type: "single",
+            label: "What do you do?",
+            required: false,
+            showWhen: "attending",
+            options: options(
+              "Design",
+              "Engineering",
+              "Product",
+              "Student",
+              "Something else",
+            ),
+          },
+          {
+            id: "q_company",
+            type: "text",
+            label: "Company or school",
+            required: false,
+            showWhen: "attending",
+          },
+          dietaryQuestion,
+        ],
+        thankYouMessage: "You're registered. See you there!",
       },
     },
   },
