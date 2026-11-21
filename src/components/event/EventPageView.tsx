@@ -1,8 +1,8 @@
 import type { CSSProperties } from "react";
 import type { EventContent, Section } from "@/lib/events/content";
-import { formatEventDate, formatTime } from "@/lib/events/format";
 import { themeVariables } from "@/lib/events/themes";
 import { EventRsvpForm } from "./EventRsvpForm";
+import { Hero } from "./Hero";
 import {
   CountdownSection,
   DressCodeSection,
@@ -58,10 +58,6 @@ function SectionBody({ section, props }: { section: Section; props: Props }) {
  */
 export function EventPageView(props: Props) {
   const { title, content, slug, notice } = props;
-  const { details } = content;
-  const when = [formatEventDate(details.date), formatTime(details.time)]
-    .filter(Boolean)
-    .join(" · ");
 
   return (
     <div
@@ -69,40 +65,12 @@ export function EventPageView(props: Props) {
       style={themeVariables(content.theme) as CSSProperties}
     >
       {notice}
-      <header className="px-6 pb-16 pt-14 text-center">
-        {details.heroImageUrl && (
-          // Hosts paste images from any site, which next/image cannot allow-list.
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={details.heroImageUrl}
-            alt=""
-            className="mx-auto mb-10 aspect-[16/9] w-full max-w-3xl rounded-2xl object-cover"
-          />
-        )}
-        {details.headline && <p className="ev-kicker">{details.headline}</p>}
-        <h1 className="ev-title mt-4 break-words text-5xl leading-tight sm:text-7xl">
-          {title}
-        </h1>
-        {when && (
-          <p className="mt-6 text-sm tracking-[0.2em] uppercase">{when}</p>
-        )}
-        {details.venue && <p className="ev-muted mt-2">{details.venue}</p>}
-        {details.intro && (
-          <p className="mx-auto mt-8 max-w-xl whitespace-pre-line leading-relaxed">
-            {details.intro}
-          </p>
-        )}
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-          <a href="#rsvp" className="ev-button">
-            RSVP
-          </a>
-          {slug && details.date && (
-            <a href={`/e/${slug}/calendar`} className="ev-link text-sm">
-              Add to calendar
-            </a>
-          )}
-        </div>
-      </header>
+      <Hero
+        title={title}
+        details={content.details}
+        layout={content.theme.layout}
+        slug={slug}
+      />
 
       {content.sections
         .filter((section) => section.enabled)

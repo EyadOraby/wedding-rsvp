@@ -52,6 +52,41 @@ body {
 
 .ev-title {
   font-family: var(--ev-title-font);
+  text-transform: var(--ev-title-transform, none);
+  letter-spacing: var(--ev-title-spacing, normal);
+}
+
+/* Subtle theme pattern behind the top of the page. */
+.ev-hero {
+  /* The first layer fades the pattern out into the page below. */
+  background-image:
+    linear-gradient(to bottom, transparent 55%, var(--ev-bg)),
+    var(--ev-pattern, none);
+  background-size:
+    100% 100%,
+    var(--ev-pattern-size, auto);
+}
+
+/* Placeholder for split heroes without a photo. */
+.ev-hero-panel {
+  background-color: color-mix(in srgb, var(--ev-accent) 14%, var(--ev-bg));
+  background-image: var(--ev-pattern, none);
+  background-size: var(--ev-pattern-size, auto);
+}
+
+/* Cover heroes without a photo: always dark, so white text stays readable. */
+.ev-cover-fallback {
+  background:
+    radial-gradient(
+      ellipse 70% 60% at 50% 0%,
+      color-mix(in srgb, var(--ev-accent) 45%, transparent),
+      transparent 70%
+    ),
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--ev-accent) 35%, #111111),
+      #111111
+    );
 }
 
 .ev-muted {
