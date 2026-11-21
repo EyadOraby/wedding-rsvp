@@ -15,6 +15,7 @@ Hosts sign up, pick a template, choose a theme and the sections they want, build
 - **Five themes** (classic, garden, midnight, modern, sunset), a custom accent colour and a cover image
 - **Sections you control:** story, schedule, location with map link, countdown, dress code, gifts or registry, FAQ; show, hide and reorder them
 - **RSVP question builder:** single and multiple choice (with "Other"), yes/no, short and long answers; required or optional; asked of everyone or only guests who are coming
+- **Guest lists:** paste names (and optional emails and party sizes); each guest gets a personal link that fills in their name, caps their party, and later lets them edit their reply; see who has not replied and the response rate
 - **Private edit links:** after replying, guests get a link to change their reply later, so plans changing never means a duplicate RSVP
 - **Guest options:** party size limits, email off/optional/required, reply deadline, custom thank-you message, add-to-calendar file
 - **Event dashboard:** replies, coming, headcount, per-question counts, search and filters, delete, CSV export

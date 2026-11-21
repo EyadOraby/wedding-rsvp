@@ -15,6 +15,8 @@ type Props = {
   /** Editing an existing reply from its private link. */
   editToken?: string;
   /** Values to start from, e.g. the reply being edited. */
+  /** A personal invitation: its token and the most people it covers. */
+  invite?: { token: string; maxGuests: number | null };
   initial?: {
     name: string;
     email: string;
@@ -163,7 +165,13 @@ export function EventRsvpForm({
   closed,
   editToken,
   initial,
+  invite,
 }: Props) {
+  // A personal invitation can cover fewer people than the event allows.
+  const maxGuests = Math.min(
+    content.rsvp.maxGuests,
+    invite?.maxGuests ?? content.rsvp.maxGuests,
+  );
   const { rsvp } = content;
   const section = content.sections.find((s) => s.type === "rsvp");
   const [attending, setAttending] = useState<boolean | null>(
@@ -207,6 +215,7 @@ export function EventRsvpForm({
             email: form.get("email") ?? null,
             message: form.get("message"),
             website: form.get("website"),
+            inviteToken: invite?.token,
             attending,
             guestCount: attending ? guestCount : 1,
             answers,
@@ -345,7 +354,7 @@ export function EventRsvpForm({
             </div>
           </fieldset>
 
-          {attending && rsvp.allowPlusOnes && rsvp.maxGuests > 1 && (
+          {attending && rsvp.allowPlusOnes && maxGuests > 1 && (
             <div>
               <label htmlFor="rsvp-guests" className="ev-kicker mb-1 block">
                 How many people, including you?
@@ -356,13 +365,11 @@ export function EventRsvpForm({
                 onChange={(e) => setGuestCount(Number(e.target.value))}
                 className="ev-input"
               >
-                {Array.from({ length: rsvp.maxGuests }, (_, i) => i + 1).map(
-                  (n) => (
-                    <option key={n} value={n}>
-                      {n}
-                    </option>
-                  ),
-                )}
+                {Array.from({ length: maxGuests }, (_, i) => i + 1).map((n) => (
+                  <option key={n} value={n}>
+                    {n}
+                  </option>
+                ))}
               </select>
             </div>
           )}

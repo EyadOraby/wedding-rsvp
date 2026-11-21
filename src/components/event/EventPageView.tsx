@@ -23,6 +23,11 @@ type Props = {
   closed?: boolean;
   /** Shown above the page, e.g. to tell the owner it is still a draft. */
   notice?: React.ReactNode;
+  /** Pre-filled or edit mode for the RSVP form, e.g. from a personal invite. */
+  form?: Pick<
+    React.ComponentProps<typeof EventRsvpForm>,
+    "initial" | "editToken" | "invite"
+  >;
 };
 
 function SectionBody({ section, props }: { section: Section; props: Props }) {
@@ -49,6 +54,7 @@ function SectionBody({ section, props }: { section: Section; props: Props }) {
           content={content}
           slug={props.slug}
           closed={props.closed}
+          {...props.form}
         />
       );
   }
