@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
-import { Great_Vibes, Inter, Playfair_Display } from "next/font/google";
+import {
+  Cormorant_Garamond,
+  Great_Vibes,
+  Inter,
+  Josefin_Sans,
+  Playfair_Display,
+} from "next/font/google";
 import { APP_NAME } from "@/config/app";
 import "./globals.css";
 
@@ -11,6 +17,17 @@ const playfair = Playfair_Display({
 
 const inter = Inter({
   variable: "--font-inter",
+  subsets: ["latin"],
+});
+
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
+
+const josefin = Josefin_Sans({
+  variable: "--font-josefin",
   subsets: ["latin"],
 });
 
@@ -42,7 +59,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${greatVibes.variable} ${inter.variable}`}
+      className={`${playfair.variable} ${greatVibes.variable} ${inter.variable} ${cormorant.variable} ${josefin.variable}`}
     >
       <body className="min-h-screen antialiased">{children}</body>
     </html>

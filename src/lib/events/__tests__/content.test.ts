@@ -125,3 +125,18 @@ describe("dates", () => {
     expect(issues(content)).toEqual([]);
   });
 });
+
+describe("hero layout", () => {
+  it("defaults to centred for events saved before layouts existed", () => {
+    const content = wedding() as unknown as { theme: Record<string, unknown> };
+    delete content.theme.layout;
+    const parsed = eventContentSchema.parse(content);
+    expect(parsed.theme.layout).toBe("centered");
+  });
+
+  it("rejects unknown layouts", () => {
+    const content = wedding() as unknown as { theme: Record<string, unknown> };
+    content.theme.layout = "sideways";
+    expect(issues(content).length).toBeGreaterThan(0);
+  });
+});

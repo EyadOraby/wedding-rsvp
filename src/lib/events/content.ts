@@ -8,21 +8,35 @@ import { z } from "zod";
 
 export const EVENT_TYPES = [
   "wedding",
+  "engagement",
   "birthday",
   "party",
+  "dinnerParty",
   "babyShower",
+  "graduation",
+  "anniversary",
   "corporate",
+  "meetup",
 ] as const;
 export type EventType = (typeof EVENT_TYPES)[number];
 
 export const THEME_IDS = [
   "classic",
+  "blush",
   "garden",
-  "midnight",
-  "modern",
+  "terracotta",
   "sunset",
+  "ocean",
+  "modern",
+  "noir",
+  "midnight",
+  "deco",
 ] as const;
 export type ThemeId = (typeof THEME_IDS)[number];
+
+/** How the top of the page is laid out. */
+export const HERO_LAYOUTS = ["centered", "split", "cover"] as const;
+export type HeroLayout = (typeof HERO_LAYOUTS)[number];
 
 const text = (max: number) =>
   z.string().trim().max(max, `Must be ${max} characters or fewer`);
@@ -81,6 +95,8 @@ export const themeSchema = z.object({
   id: z.enum(THEME_IDS),
   /** Overrides the theme's accent colour; empty keeps the theme default. */
   accent: z.union([z.literal(""), hexColorSchema]),
+  /** Older events have no layout yet, so it defaults to centred. */
+  layout: z.enum(HERO_LAYOUTS).default("centered"),
 });
 
 const sectionBase = {
