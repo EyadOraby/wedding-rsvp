@@ -84,11 +84,11 @@ git push -u origin main
 
 In **Project Settings → Environment Variables**, add:
 
-| Name | Value |
-|------|--------|
-| `POSTGRES_PRISMA_URL` | (auto-set if using Vercel Postgres) |
+| Name                       | Value                               |
+| -------------------------- | ----------------------------------- |
+| `POSTGRES_PRISMA_URL`      | (auto-set if using Vercel Postgres) |
 | `POSTGRES_URL_NON_POOLING` | (auto-set if using Vercel Postgres) |
-| `ADMIN_PASSWORD` | A strong password for `/admin` |
+| `ADMIN_PASSWORD`           | A strong password for `/admin`      |
 
 ### 5. Deploy and initialize the database
 

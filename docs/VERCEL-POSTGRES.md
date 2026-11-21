@@ -7,12 +7,15 @@ Follow these steps in order. You need a free [Vercel](https://vercel.com) accoun
 ## Part 1 — Deploy the app (if you haven’t yet)
 
 1. Push the project to GitHub:
+
    ```bash
    cd ~/wedding-rsvp
    git add .
    git commit -m "Wedding RSVP site"
    ```
+
    Create a repo on GitHub, then:
+
    ```bash
    git remote add origin https://github.com/YOUR_USERNAME/wedding-rsvp.git
    git push -u origin main
@@ -51,11 +54,11 @@ Follow these steps in order. You need a free [Vercel](https://vercel.com) accoun
 
 Vercel will add these variables to your project automatically:
 
-| Variable | Used for |
-|----------|----------|
-| `POSTGRES_PRISMA_URL` | App queries (Prisma) |
+| Variable                   | Used for               |
+| -------------------------- | ---------------------- |
+| `POSTGRES_PRISMA_URL`      | App queries (Prisma)   |
 | `POSTGRES_URL_NON_POOLING` | Migrations / `db push` |
-| `POSTGRES_URL` | General connection |
+| `POSTGRES_URL`             | General connection     |
 
 You do **not** need to create `DATABASE_URL` manually.
 
@@ -76,20 +79,24 @@ You do **not** need to create `DATABASE_URL` manually.
 ### Option A — From your Mac (recommended)
 
 1. Install Vercel CLI and log in:
+
    ```bash
    npm i -g vercel
    cd ~/wedding-rsvp
    vercel login
    vercel link
    ```
+
    Choose your Vercel team and the `wedding-rsvp` project.
 
 2. Download production env vars:
+
    ```bash
    vercel env pull .env.local
    ```
 
 3. Run migrations and seed:
+
    ```bash
    npm run db:push
    npm run db:seed
@@ -108,6 +115,7 @@ You do **not** need to create `DATABASE_URL` manually.
 2. Open the **`.env.local`** tab and copy the values.
 
 3. Paste into `~/wedding-rsvp/.env`:
+
    ```
    POSTGRES_PRISMA_URL="..."
    POSTGRES_URL_NON_POOLING="..."
@@ -125,10 +133,10 @@ You do **not** need to create `DATABASE_URL` manually.
 
 ## Part 5 — Verify
 
-| Check | URL |
-|-------|-----|
-| RSVP page | `https://your-project.vercel.app` |
-| Admin | `https://your-project.vercel.app/admin` |
+| Check     | URL                                     |
+| --------- | --------------------------------------- |
+| RSVP page | `https://your-project.vercel.app`       |
+| Admin     | `https://your-project.vercel.app/admin` |
 
 Submit a test RSVP on the live site, then open the admin dashboard and confirm the guest appears under **Guests**.
 

@@ -26,7 +26,9 @@ export function RsvpForm({ heading, meals, dietary }: RsvpFormProps) {
   const [mealId, setMealId] = useState("");
   const [selectedDietary, setSelectedDietary] = useState<string[]>([]);
   const [dietaryOther, setDietaryOther] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
   function toggleDietary(label: string) {

@@ -18,7 +18,10 @@ async function isValidAdminToken(token: string) {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith("/api/admin") && !pathname.startsWith("/api/admin/login")) {
+  if (
+    pathname.startsWith("/api/admin") &&
+    !pathname.startsWith("/api/admin/login")
+  ) {
     const token = request.cookies.get(COOKIE_NAME)?.value;
     if (!token || !(await isValidAdminToken(token))) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

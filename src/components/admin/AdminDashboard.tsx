@@ -160,12 +160,8 @@ export function AdminDashboard({
           <p className="text-muted text-sm">Refreshing…</p>
         ) : (
           <>
-            {tab === "guests" && (
-              <GuestsTab guests={guests} onRefresh={load} />
-            )}
-            {tab === "meals" && (
-              <MealsTab meals={meals} onRefresh={load} />
-            )}
+            {tab === "guests" && <GuestsTab guests={guests} onRefresh={load} />}
+            {tab === "meals" && <MealsTab meals={meals} onRefresh={load} />}
             {tab === "dietary" && (
               <DietaryTab options={dietary} onRefresh={load} />
             )}
@@ -186,7 +182,9 @@ function StatCard({ label, value }: { label: string; value: number }) {
   return (
     <div className="bg-white p-6 shadow-sm border border-black/5 text-center">
       <p className="text-3xl font-semibold">{value}</p>
-      <p className="text-xs tracking-widest uppercase text-muted mt-1">{label}</p>
+      <p className="text-xs tracking-widest uppercase text-muted mt-1">
+        {label}
+      </p>
     </div>
   );
 }
@@ -226,11 +224,7 @@ function GuestsTab({
             <tr key={g.id} className="border-b last:border-0">
               <td className="p-4 font-medium">{g.guestName}</td>
               <td className="p-4">
-                <span
-                  className={
-                    g.attending ? "text-green-700" : "text-muted"
-                  }
-                >
+                <span className={g.attending ? "text-green-700" : "text-muted"}>
                   {g.attending ? "Attending" : "Declined"}
                 </span>
               </td>
@@ -306,7 +300,9 @@ function MealsTab({
   return (
     <div className="space-y-6">
       <div className="bg-white p-6 shadow-sm border border-black/5 space-y-4">
-        <h3 className="text-xs tracking-widest uppercase text-muted">Add meal</h3>
+        <h3 className="text-xs tracking-widest uppercase text-muted">
+          Add meal
+        </h3>
         <input
           placeholder="Title"
           value={form.title}
