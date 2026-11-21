@@ -209,6 +209,11 @@ export function RsvpPanel({
           </select>
         )}
       </Field>
+      <Toggle
+        label="Email me when someone replies"
+        checked={rsvp.notifyHost}
+        onChange={(v) => update((d) => (d.rsvp.notifyHost = v))}
+      />
       <TextField
         label="Thank-you message"
         multiline

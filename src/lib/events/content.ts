@@ -230,6 +230,8 @@ export const rsvpConfigSchema = z.object({
   collectEmail: z.enum(["off", "optional", "required"]),
   questions: z.array(questionSchema).max(15),
   thankYouMessage: text(300),
+  /** Email the host about each new reply (when email is set up). */
+  notifyHost: z.boolean().default(true),
 });
 export type RsvpConfig = z.infer<typeof rsvpConfigSchema>;
 
