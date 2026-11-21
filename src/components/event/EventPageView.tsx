@@ -1,4 +1,6 @@
+import Link from "next/link";
 import type { CSSProperties } from "react";
+import { APP_NAME } from "@/config/app";
 import type { EventContent, Section } from "@/lib/events/content";
 import { themeVariables } from "@/lib/events/themes";
 import { EventRsvpForm } from "./EventRsvpForm";
@@ -84,8 +86,16 @@ export function EventPageView(props: Props) {
           </section>
         ))}
 
-      <footer className="ev-muted px-6 pb-12 pt-6 text-center text-xs tracking-[0.2em] uppercase">
-        {title}
+      <footer className="ev-muted px-6 pb-10 pt-6 text-center text-xs">
+        <p className="tracking-[0.2em] uppercase">{title}</p>
+        {slug && (
+          <Link
+            href="/"
+            className="mt-6 inline-block opacity-70 hover:opacity-100"
+          >
+            Made with {APP_NAME}
+          </Link>
+        )}
       </footer>
     </div>
   );
