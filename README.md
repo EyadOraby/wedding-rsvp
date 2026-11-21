@@ -17,7 +17,8 @@ Hosts sign up, pick a template, choose a theme and the sections they want, build
 - **Event dashboard:** replies, coming, headcount, per-question counts, search and filters, delete, CSV export
 - **Sharing:** copy link, QR code for printed invitations, and link previews in the colours of the event for WhatsApp, iMessage and social apps
 - **Drafts and publishing:** pages stay private until published; owners can preview drafts
-- **Accounts** with hashed passwords, signed session cookies and rate-limited sign-in
+- **Accounts** with hashed passwords, signed session cookies and rate-limited sign-in; change your name or password, or delete your account and all of its data
+- **Duplicate an event** to start the next one from a copy
 
 | Public page                                    | Dashboard                                          |
 | ---------------------------------------------- | -------------------------------------------------- |

@@ -60,13 +60,13 @@ A review of the finished builder found these weak spots. Each one is fixed in th
 | Hosts cannot change their password or delete their account | Account settings                                             | 13    |
 | A similar event has to be built from scratch               | Duplicate an event                                           | 13    |
 
-| #   | Branch                    | Scope                                                                          | Status      |
-| --- | ------------------------- | ------------------------------------------------------------------------------ | ----------- |
-| 9   | `chore/deploy-ready`      | Build script for Vercel, security headers, icon, error pages, round 2 plan     | Done        |
-| 10  | `feat/themes-and-layouts` | New themes and fonts, hero layouts, design presets, new templates              | Done        |
-| 11  | `feat/ui-polish`          | App shell and logo, dashboard cards, builder leave guard, landing page gallery | Done        |
-| 12  | `feat/share-and-protect`  | Open Graph images, QR code, honeypot                                           | Done        |
-| 13  | `feat/account-settings`   | Change name and password, delete account, duplicate event                      | Not started |
+| #   | Branch                    | Scope                                                                          | Status |
+| --- | ------------------------- | ------------------------------------------------------------------------------ | ------ |
+| 9   | `chore/deploy-ready`      | Build script for Vercel, security headers, icon, error pages, round 2 plan     | Done   |
+| 10  | `feat/themes-and-layouts` | New themes and fonts, hero layouts, design presets, new templates              | Done   |
+| 11  | `feat/ui-polish`          | App shell and logo, dashboard cards, builder leave guard, landing page gallery | Done   |
+| 12  | `feat/share-and-protect`  | Open Graph images, QR code, honeypot                                           | Done   |
+| 13  | `feat/account-settings`   | Change name and password, delete account, duplicate event                      | Done   |
 
 Phase 8 (deploy) runs alongside: the site is connected to Vercel, so every merge to `main` deploys and every PR gets a preview URL.
 
@@ -78,5 +78,7 @@ Ideas that are out of scope for the phases above:
 - Email confirmations to guests and new-reply alerts to hosts
 - Invite lists with a personal link per guest and response rate
 - Image uploads instead of image URLs
-- Duplicate an event; event co-hosts
+- Event co-hosts
+- Sign out other devices after a password change (sessions are stateless JWTs today)
+- Password reset by email
 - Translations and right-to-left layouts
