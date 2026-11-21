@@ -22,7 +22,7 @@ Columns hold what is queried or listed. Everything about how the page looks and 
 {
   version: 1,
   details: { headline, date, time, venue, address, mapUrl, heroImageUrl, intro },
-  theme:   { id: "classic" | "garden" | "midnight" | "modern" | "sunset", accent? },
+  theme:   { id, accent, layout: "centered" | "split" | "cover" },
   sections: Section[],   // ordered; the order on the page
   rsvp:    { deadline, allowPlusOnes, maxGuests, collectEmail, questions, thankYouMessage },
 }
@@ -54,7 +54,7 @@ The hero (headline, event title, date, venue, image) is always first. The event 
 
 Each question has `required` and `showWhen` (`always` or `attending`). The reply schema is built from the event's questions at request time (`src/lib/events/answers.ts`), so a reply can only contain answers to questions that exist, with valid option ids.
 
-**Templates** (`src/lib/events/templates.ts`) give each event type a starting point: wedding, birthday, party, baby shower and corporate. **Themes** (`src/lib/events/themes.ts`) are sets of CSS variables and font choices; the host can override the accent colour.
+**Templates** (`src/lib/events/templates.ts`) give each event type a starting point: wedding, engagement, birthday, party, dinner party, baby shower, graduation, anniversary, corporate and meetup. **Themes** (`src/lib/events/themes.ts`) are sets of CSS variables, fonts and a background pattern (ten of them); the host can override the accent colour and choose a centred, split or full-cover hero. **Design presets** (`src/lib/events/presets.ts`) combine a theme, accent and layout into one-click looks.
 
 ## Routes
 
