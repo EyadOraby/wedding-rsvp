@@ -21,7 +21,7 @@ Columns hold what is queried or listed. Everything about how the page looks and 
 ```ts
 {
   version: 1,
-  details: { headline, hosts, date, time, venue, address, mapUrl, heroImageUrl, intro },
+  details: { headline, date, time, venue, address, mapUrl, heroImageUrl, intro },
   theme:   { id: "classic" | "garden" | "midnight" | "modern" | "sunset", accent? },
   sections: Section[],   // ordered; the order on the page
   rsvp:    { deadline, allowPlusOnes, maxGuests, collectEmail, questions, thankYouMessage },
@@ -41,7 +41,7 @@ Columns hold what is queried or listed. Everything about how the page looks and 
 | `faq`       | list of `{ question, answer }`                                   |
 | `rsvp`      | the RSVP form; always enabled, but can be moved                  |
 
-The hero (headline, hosts, date, venue, image) is always first.
+The hero (headline, event title, date, venue, image) is always first. The event title is a column, so the dashboard can list events without reading their content.
 
 **RSVP questions** replace the old fixed meal and dietary fields:
 
