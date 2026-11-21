@@ -3,6 +3,8 @@ import { prisma } from "@/lib/db";
 import { validateReply } from "@/lib/events/answers";
 import { readEventContent } from "@/lib/events/content";
 import { isPastDeadline } from "@/lib/events/format";
+import { emailEnabled, sendLater } from "@/lib/email";
+import { guestConfirmation, hostAlert } from "@/lib/events/emails";
 import { findInvite } from "@/lib/events/invites";
 import { newToken } from "@/lib/events/tokens";
 import { isHoneypotFilled } from "@/lib/honeypot";
@@ -28,7 +30,13 @@ export async function POST(
 
   const event = await prisma.event.findUnique({
     where: { slug },
-    select: { id: true, published: true, content: true },
+    select: {
+      id: true,
+      title: true,
+      published: true,
+      content: true,
+      owner: { select: { email: true } },
+    },
   });
   if (!event?.published) {
     return NextResponse.json(
@@ -87,6 +95,35 @@ export async function POST(
       inviteId: invite?.id,
     },
   });
+
+  if (emailEnabled()) {
+    const origin = new URL(request.url).origin;
+    const editUrl = `${origin}/e/${slug}/reply/${editToken}`;
+    const reply = result.data;
+    sendLater([
+      ...(reply.email
+        ? [
+            guestConfirmation({
+              title: event.title,
+              content,
+              reply: { ...reply, email: reply.email },
+              editUrl,
+            }),
+          ]
+        : []),
+      ...(content.rsvp.notifyHost
+        ? [
+            hostAlert({
+              title: event.title,
+              content,
+              reply,
+              hostEmail: event.owner.email,
+              dashboardUrl: `${origin}/dashboard/events/${event.id}`,
+            }),
+          ]
+        : []),
+    ]);
+  }
   return NextResponse.json(
     { success: true, editPath: `/e/${slug}/reply/${editToken}` },
     { status: 201 },

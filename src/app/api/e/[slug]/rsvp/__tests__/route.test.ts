@@ -116,4 +116,26 @@ describe("POST /api/e/[slug]/rsvp", () => {
     expect((await post({ ...attending, website: "" })).status).toBe(201);
     expect(prisma.reply.create).toHaveBeenCalledTimes(1);
   });
+
+  it("emails the guest and the host when email is set up", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response("{}"));
+    vi.stubGlobal("fetch", fetchMock);
+    vi.stubEnv("RESEND_API_KEY", "re_test");
+    prisma.event.findUnique.mockResolvedValue({
+      id: "event_1",
+      title: "Alex & Sam",
+      published: true,
+      content,
+      owner: { email: "host@example.com" },
+    });
+    const res = await post({ ...attending, email: "sara@example.com" });
+    expect(res.status).toBe(201);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    const recipients = fetchMock.mock.calls.map(
+      ([, init]) => JSON.parse(init.body).to[0],
+    );
+    expect(recipients).toEqual(["sara@example.com", "host@example.com"]);
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+  });
 });
