@@ -1,4 +1,5 @@
-import type { EventContent, EventType, Question, Section } from "./content";
+import type { EventContent, EventType, Section } from "./content";
+import { dietaryQuestions } from "./dietary";
 
 type Template = {
   label: string;
@@ -17,22 +18,7 @@ const rsvpSection = (title = "RSVP"): Section => ({
   title,
 });
 
-const dietaryQuestion: Question = {
-  id: "q_dietary",
-  type: "multi",
-  label: "Dietary requirements",
-  required: false,
-  showWhen: "attending",
-  options: options(
-    "Vegetarian",
-    "Vegan",
-    "Halal",
-    "Kosher",
-    "Gluten free",
-    "Nut allergy",
-  ),
-  allowOther: true,
-};
+const [dietaryQuestion, allergyQuestion] = dietaryQuestions();
 
 const noDetails = {
   date: "",
@@ -138,6 +124,7 @@ export const TEMPLATES: Record<EventType, Template> = {
             options: options("Beef", "Fish", "Vegetarian"),
           },
           dietaryQuestion,
+          allergyQuestion,
           {
             id: "q_song",
             type: "text",
@@ -198,15 +185,7 @@ export const TEMPLATES: Record<EventType, Template> = {
         allowPlusOnes: true,
         maxGuests: 2,
         collectEmail: "off",
-        questions: [
-          {
-            id: "q_allergies",
-            type: "text",
-            label: "Any food allergies?",
-            required: false,
-            showWhen: "attending",
-          },
-        ],
+        questions: [],
         thankYouMessage: "Thanks for letting us know. See you there!",
       },
     },
@@ -307,6 +286,7 @@ export const TEMPLATES: Record<EventType, Template> = {
             showWhen: "always",
           },
           dietaryQuestion,
+          allergyQuestion,
         ],
         thankYouMessage: "Thank you! We are so happy you will be there.",
       },
@@ -497,6 +477,7 @@ export const TEMPLATES: Record<EventType, Template> = {
             options: options("Lamb", "Stuffed peppers (vegetarian)"),
           },
           dietaryQuestion,
+          allergyQuestion,
           {
             id: "q_bottle",
             type: "yesno",
@@ -626,6 +607,7 @@ export const TEMPLATES: Record<EventType, Template> = {
             options: options("Beef", "Fish", "Vegetarian"),
           },
           dietaryQuestion,
+          allergyQuestion,
         ],
         thankYouMessage: "Thank you for celebrating with us.",
       },
@@ -712,12 +694,26 @@ export const TEMPLATES: Record<EventType, Template> = {
             showWhen: "attending",
           },
           dietaryQuestion,
+          allergyQuestion,
         ],
         thankYouMessage: "You're registered. See you there!",
       },
     },
   },
 };
+
+// Every event serves food, so every template asks about dietary needs and
+// allergies, and meal questions feed the kitchen summary too.
+for (const template of Object.values(TEMPLATES)) {
+  const questions = template.content.rsvp.questions;
+  for (const question of questions) {
+    if (question.id === "q_meal" || question.id === "q_main")
+      question.kitchen = true;
+  }
+  for (const question of dietaryQuestions()) {
+    if (!questions.some((q) => q.id === question.id)) questions.push(question);
+  }
+}
 
 /** A fresh copy of a template, safe to change. */
 export function buildFromTemplate(type: EventType): {

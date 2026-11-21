@@ -1,6 +1,10 @@
 "use client";
 
-import { newQuestion, QUESTION_CATALOG } from "@/lib/events/catalog";
+import {
+  newQuestion,
+  QUESTION_CATALOG,
+  QUESTION_PRESETS,
+} from "@/lib/events/catalog";
 import {
   createId,
   type EventContent,
@@ -58,6 +62,11 @@ function QuestionEditor({
           label="Required"
           checked={question.required}
           onChange={(v) => edit((q) => (q.required = v))}
+        />
+        <Toggle
+          label="Kitchen summary"
+          checked={Boolean(question.kitchen)}
+          onChange={(v) => edit((q) => (q.kitchen = v))}
         />
         <label className="flex items-center gap-2 text-sm text-stone-700">
           Ask
@@ -224,6 +233,27 @@ export function RsvpPanel({
             update={update}
           />
         ))}
+        <div className="flex flex-wrap gap-2">
+          <span className="self-center text-xs font-medium text-stone-500">
+            Quick add:
+          </span>
+          {QUESTION_PRESETS.map((preset) => (
+            <button
+              key={preset.label}
+              type="button"
+              disabled={rsvp.questions.length + preset.build().length > 15}
+              onClick={() => {
+                const added = preset.build();
+                update((d) => {
+                  d.rsvp.questions.push(...added);
+                });
+              }}
+              className="rounded-full border border-stone-300 px-3 py-1 text-xs font-medium text-stone-700 hover:bg-stone-100 disabled:opacity-40"
+            >
+              + {preset.label}
+            </button>
+          ))}
+        </div>
         <select
           aria-label="Add a question"
           value=""

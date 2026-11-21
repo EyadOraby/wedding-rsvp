@@ -200,6 +200,8 @@ const questionBase = {
   required: z.boolean(),
   /** "attending" questions are only asked of guests who say yes. */
   showWhen: z.enum(["always", "attending"]),
+  /** Food answers (meals, dietary needs, allergies) go to the kitchen summary. */
+  kitchen: z.boolean().optional(),
 };
 
 const options = z.array(optionSchema).min(1, "Add at least one option").max(20);

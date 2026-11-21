@@ -5,6 +5,7 @@ import {
   type Section,
   type SectionType,
 } from "./content";
+import { dietaryQuestions } from "./dietary";
 
 type CatalogEntry = { label: string; description: string };
 
@@ -72,6 +73,43 @@ export function newSection(type: SectionType): Section {
       return { ...base, type, enabled: true, title: "RSVP" };
   }
 }
+
+/** One-click questions for the RSVP form builder. */
+export const QUESTION_PRESETS: { label: string; build: () => Question[] }[] = [
+  {
+    label: "Dietary needs & allergies",
+    build: () => dietaryQuestions(true),
+  },
+  {
+    label: "Meal choice",
+    build: () => [
+      {
+        id: createId("q"),
+        type: "single",
+        label: "Meal choice",
+        required: true,
+        showWhen: "attending",
+        kitchen: true,
+        options: ["Meat", "Fish", "Vegetarian"].map((label) => ({
+          id: createId("opt"),
+          label,
+        })),
+      },
+    ],
+  },
+  {
+    label: "Song request",
+    build: () => [
+      {
+        id: createId("q"),
+        type: "text",
+        label: "A song that will get you dancing",
+        required: false,
+        showWhen: "attending",
+      },
+    ],
+  },
+];
 
 export function newQuestion(type: QuestionType): Question {
   const base = {
