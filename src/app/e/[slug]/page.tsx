@@ -25,6 +25,12 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return {
     title: `${title}${date ? ` · ${date}` : ""}`,
     description: content.details.intro || `You're invited: ${title}`,
+    openGraph: {
+      title,
+      description: content.details.intro || `You're invited: ${title}`,
+      type: "website",
+    },
+    twitter: { card: "summary_large_image" },
     robots: { index: false, follow: false },
   };
 }
