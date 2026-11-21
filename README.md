@@ -1,132 +1,98 @@
-# Wedding RSVP
+# RSVP Studio
 
-A minimalist wedding RSVP site with meal selection, dietary requirements, banking details, and an admin dashboard. Built with **Next.js** and designed for free hosting on **Vercel**.
+Create a beautiful RSVP page for any event, share one link, and watch the replies come in.
+
+Hosts sign up, pick a template, choose a theme and the sections they want, build their own RSVP questions and publish. Guests reply from any device. Every event has a dashboard with the headcount, answer breakdowns, a searchable list of replies and a CSV export.
+
+![Builder with live preview](docs/screenshots/builder.png)
 
 ## Features
 
-- **Landing page** (`/`) — elegant cream-and-serif design inspired by classic wedding sites
-- **RSVP form** — attending / declining, meal choice, dietary checkboxes, optional message
-- **Gifting section** — bank details for guests (editable in admin)
-- **Admin dashboard** (`/admin`) — guest list, meal & dietary options, banking & site settings
+- **Templates** for weddings, birthdays, parties, baby showers and corporate events
+- **Builder with live preview** on desktop or phone width
+- **Five themes** (classic, garden, midnight, modern, sunset), a custom accent colour and a cover image
+- **Sections you control:** story, schedule, location with map link, countdown, dress code, gifts or registry, FAQ; show, hide and reorder them
+- **RSVP question builder:** single and multiple choice (with "Other"), yes/no, short and long answers; required or optional; asked of everyone or only guests who are coming
+- **Guest options:** party size limits, email off/optional/required, reply deadline, custom thank-you message, add-to-calendar file
+- **Event dashboard:** replies, coming, headcount, per-question counts, search and filters, delete, CSV export
+- **Drafts and publishing:** pages stay private until published; owners can preview drafts
+- **Accounts** with hashed passwords, signed session cookies and rate-limited sign-in
 
-## Local development
-
-### 1. Install dependencies
-
-```bash
-npm install
-```
-
-### 2. Set up the database
-
-Create a free PostgreSQL database (any of these work):
-
-- [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres) (recommended when deploying to Vercel)
-- [Neon](https://neon.tech) (free tier)
-- [Supabase](https://supabase.com) (free tier)
-
-Copy the example env file and add your connection string and admin password:
-
-```bash
-cp .env.example .env
-```
-
-Edit `.env`:
-
-```
-POSTGRES_PRISMA_URL="postgresql://..."        # pooled connection
-POSTGRES_URL_NON_POOLING="postgresql://..."   # direct connection
-ADMIN_PASSWORD="your-secret-password"
-SESSION_SECRET="..."   # 32+ random characters: openssl rand -base64 48
-```
-
-### 3. Create tables and seed data
-
-```bash
-npm run db:push
-npm run db:seed
-```
-
-### 4. Run the dev server
-
-```bash
-npm run dev
-```
-
-- RSVP site: [http://localhost:3000](http://localhost:3000)
-- Admin: [http://localhost:3000/admin](http://localhost:3000/admin) (use `ADMIN_PASSWORD`)
-
-## Deploy to Vercel (free)
-
-Both the public site and admin dashboard deploy together as one Next.js app.
-
-### 1. Push to GitHub
-
-```bash
-git init   # if not already
-git add .
-git commit -m "Initial wedding RSVP site"
-git remote add origin https://github.com/YOUR_USER/wedding-rsvp.git
-git push -u origin main
-```
-
-### 2. Import on Vercel
-
-1. Go to [vercel.com/new](https://vercel.com/new)
-2. Import your GitHub repository
-3. Framework preset: **Next.js** (auto-detected)
-
-### 3. Add Postgres storage
-
-1. In your Vercel project → **Storage** → **Create Database** → **Postgres**
-2. Connect it to the project — Vercel sets `POSTGRES_PRISMA_URL` and `POSTGRES_URL_NON_POOLING` automatically
-
-### 4. Add environment variables
-
-In **Project Settings → Environment Variables**, add:
-
-| Name                       | Value                                             |
-| -------------------------- | ------------------------------------------------- |
-| `POSTGRES_PRISMA_URL`      | (auto-set if using Vercel Postgres)               |
-| `POSTGRES_URL_NON_POOLING` | (auto-set if using Vercel Postgres)               |
-| `ADMIN_PASSWORD`           | A strong password for `/admin`                    |
-| `SESSION_SECRET`           | 32+ random characters (`openssl rand -base64 48`) |
-
-### 5. Deploy and initialize the database
-
-After the first deploy, run these once from your machine (with `POSTGRES_PRISMA_URL` and `POSTGRES_URL_NON_POOLING` pointing to production, or use Vercel CLI):
-
-```bash
-npx vercel env pull .env   # Prisma and Next.js both read .env
-npx prisma db push
-npx prisma db seed
-```
-
-Or add a **Build Command** override in Vercel (optional, for migrations on each deploy):
-
-```
-npx prisma db push && npm run build
-```
-
-### 6. Your live URLs
-
-- **RSVP page:** `https://your-project.vercel.app`
-- **Admin:** `https://your-project.vercel.app/admin`
-
-## Customization
-
-Use the admin dashboard (**Site** tab) to update:
-
-- Couple initials and names
-- Wedding date and location
-- Hero image URL
-- Section headings
-
-Use **Meals**, **Dietary**, and **Banking** tabs to add, hide, or remove options without code changes.
+| Public page                                    | Dashboard                                          |
+| ---------------------------------------------- | -------------------------------------------------- |
+| ![Event page](docs/screenshots/event-page.png) | ![Event dashboard](docs/screenshots/dashboard.png) |
 
 ## Tech stack
 
-- [Next.js](https://nextjs.org) (App Router)
-- [Tailwind CSS](https://tailwindcss.com)
-- [Prisma](https://www.prisma.io) + PostgreSQL
-- [Vercel](https://vercel.com) hosting
+Next.js (App Router) · React · TypeScript · Tailwind CSS · Prisma · PostgreSQL · zod · Vitest · GitHub Actions
+
+## Getting started
+
+You need Node.js 24 (see `.nvmrc`) and a PostgreSQL database.
+
+```bash
+npm ci
+cp .env.example .env
+```
+
+Fill in `.env`:
+
+| Variable                   | What it is                                            |
+| -------------------------- | ----------------------------------------------------- |
+| `POSTGRES_PRISMA_URL`      | Database connection used by the app                   |
+| `POSTGRES_URL_NON_POOLING` | Direct connection used for schema changes             |
+| `SESSION_SECRET`           | 32+ random characters, e.g. `openssl rand -base64 48` |
+| `DEMO_PASSWORD`            | Optional, for the demo account below                  |
+
+No database yet? `npx prisma dev` starts a local Postgres and prints a connection string you can use for both URLs (add `&pgbouncer=true&connection_limit=1` to `POSTGRES_PRISMA_URL`, since the local server takes one connection at a time). Neon, Supabase and Vercel Postgres also work.
+
+Then create the tables, add the demo data and start the app:
+
+```bash
+npm run db:push
+npm run db:seed   # optional: demo@example.com with a sample wedding and replies
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000), sign up and create your first event. The seeded example page is at `/e/demo-wedding`.
+
+## Scripts
+
+| Command             | What it does                         |
+| ------------------- | ------------------------------------ |
+| `npm run dev`       | Development server                   |
+| `npm run build`     | Production build                     |
+| `npm test`          | Unit and route tests (Vitest)        |
+| `npm run lint`      | ESLint                               |
+| `npm run typecheck` | TypeScript                           |
+| `npm run format`    | Prettier                             |
+| `npm run db:push`   | Create or update the database tables |
+| `npm run db:seed`   | Demo account and sample event        |
+
+## Project structure
+
+```
+src/
+  app/                  pages and route handlers
+    e/[slug]/           public event page and calendar file
+    dashboard/          events list, templates, event dashboard, builder
+    api/                auth, owner and public RSVP endpoints
+  components/
+    event/              public page: sections, themed RSVP form
+    builder/            builder tabs and editors
+    dashboard/          stats, answer breakdowns, replies table
+  lib/
+    events/             content schema, templates, themes, answers, stats, CSV, calendar
+prisma/                 schema and demo seed
+docs/                   architecture, deployment and workflow
+```
+
+How the pieces fit together is described in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+
+## Deployment
+
+The app runs well on free plans: Vercel for hosting and Neon for Postgres. See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+
+## License
+
+[MIT](LICENSE)
