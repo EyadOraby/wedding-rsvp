@@ -1,13 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
-import {
-  SESSION_COOKIE,
-  USER_SESSION_COOKIE,
-  verifySessionToken,
-  verifyUserToken,
-} from "@/lib/session";
+import { USER_SESSION_COOKIE, verifyUserToken } from "@/lib/session";
 
 const SAFE_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
-const PUBLIC_ADMIN_PATHS = new Set(["/admin/login", "/api/admin/login"]);
 
 /** Browsers always send Origin on cross-site POST/PUT/PATCH/DELETE requests. */
 function isSameOrigin(request: NextRequest): boolean {
@@ -22,17 +16,6 @@ function isSameOrigin(request: NextRequest): boolean {
   }
 }
 
-function unauthorized(isApi: boolean, request: NextRequest, loginPath: string) {
-  if (isApi) {
-    return NextResponse.json({ error: "Please log in" }, { status: 401 });
-  }
-  const url = new URL(loginPath, request.url);
-  if (loginPath === "/login") {
-    url.searchParams.set("next", request.nextUrl.pathname);
-  }
-  return NextResponse.redirect(url);
-}
-
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const isApi = pathname.startsWith("/api/");
@@ -44,30 +27,22 @@ export async function proxy(request: NextRequest) {
     );
   }
 
-  // The original single-wedding admin.
-  if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
-    if (PUBLIC_ADMIN_PATHS.has(pathname)) return NextResponse.next();
-    const signedIn = await verifySessionToken(
-      request.cookies.get(SESSION_COOKIE)?.value,
-    );
-    return signedIn
-      ? NextResponse.next()
-      : unauthorized(isApi, request, "/admin/login");
-  }
+  const needsAccount =
+    pathname.startsWith("/dashboard") || pathname.startsWith("/api/events");
+  if (!needsAccount) return NextResponse.next();
 
-  // Builder accounts.
-  if (pathname.startsWith("/dashboard") || pathname.startsWith("/api/events")) {
-    const userId = await verifyUserToken(
-      request.cookies.get(USER_SESSION_COOKIE)?.value,
-    );
-    return userId
-      ? NextResponse.next()
-      : unauthorized(isApi, request, "/login");
+  const userId = await verifyUserToken(
+    request.cookies.get(USER_SESSION_COOKIE)?.value,
+  );
+  if (userId) return NextResponse.next();
+  if (isApi) {
+    return NextResponse.json({ error: "Please log in" }, { status: 401 });
   }
-
-  return NextResponse.next();
+  const login = new URL("/login", request.url);
+  login.searchParams.set("next", pathname);
+  return NextResponse.redirect(login);
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/dashboard/:path*", "/api/:path*"],
+  matcher: ["/dashboard/:path*", "/api/:path*"],
 };

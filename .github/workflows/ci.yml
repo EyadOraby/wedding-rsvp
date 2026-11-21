@@ -20,7 +20,6 @@ jobs:
       # Placeholders: the build never connects to the database.
       POSTGRES_PRISMA_URL: postgresql://ci:ci@localhost:5432/ci
       POSTGRES_URL_NON_POOLING: postgresql://ci:ci@localhost:5432/ci
-      ADMIN_PASSWORD: ci-only-password
       SESSION_SECRET: ci-only-session-secret-at-least-32-chars
     steps:
       - uses: actions/checkout@v4

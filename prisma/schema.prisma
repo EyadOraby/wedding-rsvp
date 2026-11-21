@@ -8,62 +8,7 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
-model SiteSettings {
-  id             String   @id @default("default")
-  initials       String   @default("A & S")
-  coupleNames    String   @default("ALEX & SAM")
-  weddingDate    String   @default("SATURDAY, JUNE 12, 2027")
-  location       String   @default("CAIRO, EGYPT")
-  heroImageUrl   String?
-  rsvpHeading    String   @default("RSVP")
-  bankingHeading String   @default("GIFTING")
-  updatedAt      DateTime @updatedAt
-}
-
-model MealOption {
-  id          String  @id @default(cuid())
-  title       String
-  description String
-  tag         String?
-  sortOrder   Int     @default(0)
-  active      Boolean @default(true)
-  rsvps       Rsvp[]
-}
-
-model DietaryOption {
-  id        String  @id @default(cuid())
-  label     String
-  sortOrder Int     @default(0)
-  active    Boolean @default(true)
-}
-
-model BankingInfo {
-  id            String   @id @default("default")
-  accountName   String
-  bankName      String
-  accountNumber String
-  branchCode    String
-  notes         String?
-  active        Boolean  @default(true)
-  updatedAt     DateTime @updatedAt
-}
-
-model Rsvp {
-  id            String      @id @default(cuid())
-  guestName     String
-  email         String?
-  attending     Boolean
-  guestCount    Int         @default(1)
-  mealOptionId  String?
-  mealOption    MealOption? @relation(fields: [mealOptionId], references: [id], onDelete: SetNull)
-  dietaryLabels String[]
-  dietaryOther  String?
-  message       String?
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-}
-
-// RSVP builder: users create events, guests reply to them.
+// Hosts sign up, create events and collect replies from guests.
 
 model User {
   id           String   @id @default(cuid())

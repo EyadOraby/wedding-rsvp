@@ -1,96 +1,15 @@
 @import "tailwindcss";
 
-:root {
-  --cream: #f7f5f0;
-  --charcoal: #2a2a2a;
-  --muted: #5c5c5c;
-  --accent: #b87d8a;
-  --accent-hover: #a66b78;
-  --line: #2a2a2a;
-  --card: #ffffff;
-}
-
 @theme inline {
-  --color-cream: var(--cream);
-  --color-charcoal: var(--charcoal);
-  --color-muted: var(--muted);
-  --color-accent: var(--accent);
-  --color-accent-hover: var(--accent-hover);
-  --color-line: var(--line);
-  --color-card: var(--card);
   --font-serif: var(--font-playfair);
   --font-script: var(--font-great-vibes);
   --font-sans: var(--font-inter), system-ui, sans-serif;
 }
 
 body {
-  background: var(--cream);
-  color: var(--charcoal);
-  font-family: var(--font-playfair), Georgia, "Times New Roman", serif;
-}
-
-.section-title {
-  letter-spacing: 0.35em;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-}
-
-.heading-spaced {
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-
-.divider {
-  border: none;
-  border-top: 1px solid var(--line);
-  width: 100%;
-  max-width: 28rem;
-  margin: 0 auto;
-}
-
-.checkbox-custom {
-  appearance: none;
-  width: 1.125rem;
-  height: 1.125rem;
-  border: 1px solid var(--charcoal);
-  border-radius: 2px;
-  background: transparent;
-  cursor: pointer;
-  flex-shrink: 0;
-  margin-top: 0.15rem;
-}
-
-.checkbox-custom:checked {
-  background: var(--accent);
-  border-color: var(--accent);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'%3E%3Cpath d='M12.207 4.793a1 1 0 0 1 0 1.414l-5 5a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L6.5 9.086l4.293-4.293a1 1 0 0 1 1.414 0z'/%3E%3C/svg%3E");
-  background-size: 100% 100%;
-}
-
-.meal-radio:checked + .meal-card {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent);
-}
-
-.input-field {
-  width: 100%;
-  border: none;
-  border-bottom: 1px solid var(--line);
-  background: transparent;
-  padding: 0.5rem 0;
-  font-family: inherit;
-  font-size: 0.95rem;
-  color: var(--charcoal);
-  outline: none;
-}
-
-.input-field:focus {
-  border-bottom-color: var(--accent);
-}
-
-.input-field::placeholder {
-  color: #999;
-  font-style: italic;
+  background: #fafaf9;
+  color: #1c1917;
+  font-family: var(--font-inter), system-ui, sans-serif;
 }
 
 /* Builder and dashboard UI */

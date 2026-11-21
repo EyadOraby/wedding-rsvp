@@ -1,7 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { safeNextPath, signupSchema } from "../accounts";
 import { hashPassword, verifyPassword } from "../password";
-import { signSessionToken, signUserToken, verifyUserToken } from "../session";
+import { SignJWT } from "jose";
+import { signUserToken, verifyUserToken } from "../session";
 
 describe("passwords", () => {
   it("verifies the right password and rejects others", async () => {
@@ -30,8 +31,12 @@ describe("user sessions", () => {
     expect(await verifyUserToken(await signUserToken("user_1"))).toBe("user_1");
   });
 
-  it("does not accept an admin token as a user session", async () => {
-    expect(await verifyUserToken(await signSessionToken())).toBeNull();
+  it("rejects tokens without the user role", async () => {
+    const token = await new SignJWT({ role: "admin" })
+      .setProtectedHeader({ alg: "HS256" })
+      .setSubject("user_1")
+      .sign(new TextEncoder().encode(process.env.SESSION_SECRET));
+    expect(await verifyUserToken(token)).toBeNull();
   });
 
   it("rejects tokens signed with another secret", async () => {
