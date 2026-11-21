@@ -23,7 +23,7 @@ export default async function DashboardPage() {
   });
 
   return (
-    <div>
+    <main className="mx-auto max-w-6xl px-4 py-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Your events</h1>
@@ -31,14 +31,20 @@ export default async function DashboardPage() {
             Hi {user.name.split(" ")[0]}, here is everything you are hosting.
           </p>
         </div>
+        <Link href="/dashboard/new" className="app-button">
+          New event
+        </Link>
       </div>
 
       {events.length === 0 ? (
         <div className="app-card mt-8 p-10 text-center">
           <p className="font-medium">No events yet</p>
           <p className="mt-1 text-sm text-stone-600">
-            Your events and their replies will show up here.
+            Pick a template, make it yours and share the link.
           </p>
+          <Link href="/dashboard/new" className="app-button mt-6">
+            Create your first event
+          </Link>
         </div>
       ) : (
         <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -74,6 +80,6 @@ export default async function DashboardPage() {
           ))}
         </ul>
       )}
-    </div>
+    </main>
   );
 }
