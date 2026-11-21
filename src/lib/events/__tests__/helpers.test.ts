@@ -52,9 +52,15 @@ describe("computeStats", () => {
       options: [{ label: "Beef", count: 2 }, { count: 0 }, { count: 0 }],
     });
     const dietary = stats.questions.find((q) => q.id === "q_dietary");
-    expect(dietary).toMatchObject({ answered: 2, other: ["No nuts"] });
+    expect(dietary).toMatchObject({
+      answered: 2,
+      other: [{ name: "Omar", text: "No nuts" }],
+    });
     const song = stats.questions.find((q) => q.id === "q_song");
-    expect(song).toMatchObject({ answered: 1, texts: ["September"] });
+    expect(song).toMatchObject({
+      answered: 1,
+      texts: [{ name: "Sara", text: "September" }],
+    });
   });
 });
 
@@ -71,10 +77,10 @@ describe("csv", () => {
       .trim()
       .split("\r\n");
     expect(lines[0]).toBe(
-      "Name,Email,Attending,Guests,Meal choice,Dietary requirements,A song that will get you dancing,Message,Replied at",
+      "Name,Email,Attending,Guests,Meal choice,Dietary requirements,Allergies or food notes for the kitchen,A song that will get you dancing,Message,Replied at",
     );
     expect(lines[1]).toBe(
-      "Sara,,Yes,2,Beef,Vegan,September,,2027-01-02T10:00:00.000Z",
+      "Sara,,Yes,2,Beef,Vegan,,September,,2027-01-02T10:00:00.000Z",
     );
     expect(lines[2]).toContain("Other: No nuts");
     expect(lines[3]).toContain("Lina,,No,0");
