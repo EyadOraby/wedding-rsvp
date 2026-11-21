@@ -40,11 +40,40 @@ Then read the status table, set up `.env` (see the README), and continue with th
 | 7   | `refactor/remove-single-event-site` | Builder landing page at `/`; remove the old single-wedding site, admin and models; demo seed; README                                                                      | Done        |
 | 8   | Deploy                              | Vercel + Neon, following [DEPLOYMENT.md](DEPLOYMENT.md) (needs the owner's accounts)                                                                                      | Not started |
 
+## Round 2: polish and launch
+
+A review of the finished builder found these weak spots. Each one is fixed in the phase shown.
+
+| Weak spot                                                  | Fix                                                          | Phase |
+| ---------------------------------------------------------- | ------------------------------------------------------------ | ----- |
+| Default Next.js favicon and leftover starter images        | App icon and logo; unused files removed                      | 9     |
+| Unstyled 404 and error pages                               | Branded not-found, event not-found and error pages           | 9     |
+| No security headers                                        | `nosniff`, frame blocking, referrer and permissions policies | 9     |
+| Schema is not applied when Vercel builds                   | `vercel-build` runs `prisma db push` before the build        | 9     |
+| Only five looks, all with the same centred hero            | More themes, hero layouts and one-click design presets       | 10    |
+| Only five event types                                      | More templates                                               | 10    |
+| Leaving the builder with the back link loses unsaved work  | Ask before leaving                                           | 11    |
+| Dashboard cards show no date, headcount or look            | Richer event cards                                           | 11    |
+| Shared links show no preview in chat apps                  | Open Graph image per event                                   | 12    |
+| Printed invitations have no way to link to the page        | QR code in the share panel                                   | 12    |
+| Public form has rate limits but no bot trap                | Hidden honeypot field                                        | 12    |
+| Hosts cannot change their password or delete their account | Account settings                                             | 13    |
+| A similar event has to be built from scratch               | Duplicate an event                                           | 13    |
+
+| #   | Branch                    | Scope                                                                          | Status      |
+| --- | ------------------------- | ------------------------------------------------------------------------------ | ----------- |
+| 9   | `chore/deploy-ready`      | Build script for Vercel, security headers, icon, error pages, round 2 plan     | Done        |
+| 10  | `feat/themes-and-layouts` | New themes and fonts, hero layouts, design presets, new templates              | Not started |
+| 11  | `feat/ui-polish`          | App shell and logo, dashboard cards, builder leave guard, landing page gallery | Not started |
+| 12  | `feat/share-and-protect`  | Open Graph images, QR code, honeypot                                           | Not started |
+| 13  | `feat/account-settings`   | Change name and password, delete account, duplicate event                      | Not started |
+
+Phase 8 (deploy) runs alongside: the site is connected to Vercel, so every merge to `main` deploys and every PR gets a preview URL.
+
 ## Backlog
 
 Ideas that are out of scope for the phases above:
 
-- QR code for printed invitations
 - Guests can edit their reply from a private link
 - Email confirmations to guests and new-reply alerts to hosts
 - Invite lists with a personal link per guest and response rate
