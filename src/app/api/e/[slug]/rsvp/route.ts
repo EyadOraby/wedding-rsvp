@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { validateReply } from "@/lib/events/answers";
 import { readEventContent } from "@/lib/events/content";
 import { isPastDeadline } from "@/lib/events/format";
+import { findInvite } from "@/lib/events/invites";
 import { newToken } from "@/lib/events/tokens";
 import { isHoneypotFilled } from "@/lib/honeypot";
 import { clientIp, rateLimit } from "@/lib/rate-limit";
@@ -65,9 +66,26 @@ export async function POST(
     );
   }
 
+  // Replies from a personal invitation link are tied to that invitation.
+  const invite = await findInvite(event.id, body);
+  if (invite?.maxGuests && result.data.guestCount > invite.maxGuests) {
+    return NextResponse.json(
+      {
+        error: `Your invitation is for ${invite.maxGuests} ${invite.maxGuests === 1 ? "person" : "people"}`,
+        field: "guestCount",
+      },
+      { status: 400 },
+    );
+  }
+
   const editToken = newToken();
   await prisma.reply.create({
-    data: { eventId: event.id, ...result.data, editToken },
+    data: {
+      eventId: event.id,
+      ...result.data,
+      editToken,
+      inviteId: invite?.id,
+    },
   });
   return NextResponse.json(
     { success: true, editPath: `/e/${slug}/reply/${editToken}` },

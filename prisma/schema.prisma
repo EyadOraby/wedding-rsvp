@@ -33,6 +33,7 @@ model Event {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   replies   Reply[]
+  invites   Invite[]
 
   @@index([ownerId])
 }
@@ -50,9 +51,30 @@ model Reply {
   answers    Json     @default("{}")
   /// Secret for the guest's private edit link
   editToken  String?
+  /// The personal invitation this reply came from, if any
+  inviteId   String?
+  invite     Invite?  @relation(fields: [inviteId], references: [id], onDelete: SetNull)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now()) @updatedAt
 
   @@index([eventId, createdAt])
   @@index([editToken])
+  @@index([inviteId])
+}
+
+/// A guest on the host's list, with a personal link to reply.
+model Invite {
+  id        String   @id @default(cuid())
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name      String
+  email     String?
+  /// Most people this invitation covers; empty means the event's limit
+  maxGuests Int?
+  token     String
+  createdAt DateTime @default(now())
+  replies   Reply[]
+
+  @@index([eventId])
+  @@index([token])
 }
