@@ -48,7 +48,11 @@ model Reply {
   message    String?
   /// Answers keyed by question id; see src/lib/events/answers.ts
   answers    Json     @default("{}")
+  /// Secret for the guest's private edit link
+  editToken  String?
   createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
 
   @@index([eventId, createdAt])
+  @@index([editToken])
 }

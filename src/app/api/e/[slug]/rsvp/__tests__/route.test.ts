@@ -58,6 +58,15 @@ describe("POST /api/e/[slug]/rsvp", () => {
     });
   });
 
+  it("returns a private edit link and stores its token", async () => {
+    const res = await post(attending);
+    const { editPath } = await res.json();
+    expect(editPath.startsWith("/e/alex-sam/reply/")).toBe(true);
+    expect(editPath.split("/").pop()).toHaveLength(24);
+    const token = editPath.split("/").pop();
+    expect(prisma.reply.create.mock.calls[0][0].data.editToken).toBe(token);
+  });
+
   it("returns 404 for drafts and unknown events", async () => {
     prisma.event.findUnique.mockResolvedValueOnce({
       id: "event_1",

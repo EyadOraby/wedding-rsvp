@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { validateReply } from "@/lib/events/answers";
 import { readEventContent } from "@/lib/events/content";
 import { isPastDeadline } from "@/lib/events/format";
+import { newToken } from "@/lib/events/tokens";
 import { isHoneypotFilled } from "@/lib/honeypot";
 import { clientIp, rateLimit } from "@/lib/rate-limit";
 
@@ -64,6 +65,12 @@ export async function POST(
     );
   }
 
-  await prisma.reply.create({ data: { eventId: event.id, ...result.data } });
-  return NextResponse.json({ success: true }, { status: 201 });
+  const editToken = newToken();
+  await prisma.reply.create({
+    data: { eventId: event.id, ...result.data, editToken },
+  });
+  return NextResponse.json(
+    { success: true, editPath: `/e/${slug}/reply/${editToken}` },
+    { status: 201 },
+  );
 }
