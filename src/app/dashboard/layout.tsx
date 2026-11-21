@@ -1,7 +1,10 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { LogoutButton } from "@/components/app/LogoutButton";
 import { APP_NAME } from "@/config/app";
 import { requireUserPage } from "@/lib/auth";
+
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default async function DashboardLayout({
   children,

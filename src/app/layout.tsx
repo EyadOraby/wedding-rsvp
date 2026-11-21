@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Great_Vibes, Inter, Playfair_Display } from "next/font/google";
+import { APP_NAME } from "@/config/app";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -20,10 +21,9 @@ const greatVibes = Great_Vibes({
 });
 
 export const metadata: Metadata = {
-  title: "Wedding RSVP",
-  description: "RSVP for our wedding celebration",
-  // A private event page: keep it out of search results.
-  robots: { index: false, follow: false },
+  title: `${APP_NAME} · RSVP pages for any event`,
+  description:
+    "Create a beautiful RSVP page for your wedding, birthday or party, collect replies and see who is coming.",
 };
 
 export default function RootLayout({
