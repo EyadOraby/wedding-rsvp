@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import {
+  mealCreateSchema,
+  mealUpdateSchema,
+  parseJson,
+} from "@/lib/validation";
 
 export async function GET() {
   const denied = await requireAdmin();
@@ -14,33 +19,19 @@ export async function GET() {
 export async function POST(request: Request) {
   const denied = await requireAdmin();
   if (denied) return denied;
-  const body = await request.json();
-  const meal = await prisma.mealOption.create({
-    data: {
-      title: body.title,
-      description: body.description,
-      tag: body.tag || null,
-      sortOrder: body.sortOrder ?? 0,
-      active: body.active ?? true,
-    },
-  });
+  const parsed = await parseJson(request, mealCreateSchema);
+  if (!parsed.ok) return parsed.response;
+  const meal = await prisma.mealOption.create({ data: parsed.data });
   return NextResponse.json(meal);
 }
 
 export async function PATCH(request: Request) {
   const denied = await requireAdmin();
   if (denied) return denied;
-  const body = await request.json();
-  const meal = await prisma.mealOption.update({
-    where: { id: body.id },
-    data: {
-      title: body.title,
-      description: body.description,
-      tag: body.tag,
-      sortOrder: body.sortOrder,
-      active: body.active,
-    },
-  });
+  const parsed = await parseJson(request, mealUpdateSchema);
+  if (!parsed.ok) return parsed.response;
+  const { id, ...data } = parsed.data;
+  const meal = await prisma.mealOption.update({ where: { id }, data });
   return NextResponse.json(meal);
 }
 

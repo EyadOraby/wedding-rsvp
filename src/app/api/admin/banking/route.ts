@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { bankingSchema, parseJson } from "@/lib/validation";
 
 export async function GET() {
   const denied = await requireAdmin();
@@ -14,25 +15,12 @@ export async function GET() {
 export async function PUT(request: Request) {
   const denied = await requireAdmin();
   if (denied) return denied;
-  const body = await request.json();
+  const parsed = await parseJson(request, bankingSchema);
+  if (!parsed.ok) return parsed.response;
   const banking = await prisma.bankingInfo.upsert({
     where: { id: "default" },
-    update: {
-      accountName: body.accountName,
-      bankName: body.bankName,
-      accountNumber: body.accountNumber,
-      branchCode: body.branchCode,
-      notes: body.notes,
-      active: body.active,
-    },
-    create: {
-      accountName: body.accountName,
-      bankName: body.bankName,
-      accountNumber: body.accountNumber,
-      branchCode: body.branchCode,
-      notes: body.notes,
-      active: body.active ?? true,
-    },
+    update: parsed.data,
+    create: { id: "default", ...parsed.data },
   });
   return NextResponse.json(banking);
 }

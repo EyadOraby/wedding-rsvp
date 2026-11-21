@@ -1,51 +1,39 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { parseJson, rsvpSchema } from "@/lib/validation";
 
 export async function POST(request: Request) {
+  const parsed = await parseJson(request, rsvpSchema);
+  if (!parsed.ok) return parsed.response;
+  const input = parsed.data;
+
   try {
-    const body = await request.json();
-    const {
-      guestName,
-      email,
-      attending,
-      guestCount,
-      mealOptionId,
-      dietaryLabels,
-      dietaryOther,
-      message,
-    } = body;
-
-    if (!guestName?.trim()) {
-      return NextResponse.json(
-        { error: "Please enter your name" },
-        { status: 400 },
-      );
-    }
-
-    if (typeof attending !== "boolean") {
-      return NextResponse.json(
-        { error: "Please let us know if you can attend" },
-        { status: 400 },
-      );
-    }
-
-    if (attending && !mealOptionId) {
-      return NextResponse.json(
-        { error: "Please choose a meal option" },
-        { status: 400 },
-      );
+    if (input.attending) {
+      const meal = await prisma.mealOption.findFirst({
+        where: { id: input.mealOptionId ?? "", active: true },
+        select: { id: true },
+      });
+      if (!meal) {
+        return NextResponse.json(
+          {
+            error: "That meal option is no longer available",
+            field: "mealOptionId",
+          },
+          { status: 400 },
+        );
+      }
     }
 
     const rsvp = await prisma.rsvp.create({
       data: {
-        guestName: guestName.trim(),
-        email: email?.trim() || null,
-        attending,
-        guestCount: attending ? Math.max(1, Number(guestCount) || 1) : 0,
-        mealOptionId: attending ? mealOptionId : null,
-        dietaryLabels: Array.isArray(dietaryLabels) ? dietaryLabels : [],
-        dietaryOther: dietaryOther?.trim() || null,
-        message: message?.trim() || null,
+        guestName: input.guestName,
+        email: input.email,
+        attending: input.attending,
+        guestCount: input.attending ? input.guestCount : 0,
+        mealOptionId: input.attending ? (input.mealOptionId ?? null) : null,
+        dietaryLabels: input.attending ? input.dietaryLabels : [],
+        dietaryOther: input.attending ? input.dietaryOther : null,
+        message: input.message,
       },
     });
 

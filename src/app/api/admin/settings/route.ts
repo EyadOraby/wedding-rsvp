@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { parseJson, settingsSchema } from "@/lib/validation";
 
 export async function GET() {
   const denied = await requireAdmin();
@@ -14,27 +15,12 @@ export async function GET() {
 export async function PUT(request: Request) {
   const denied = await requireAdmin();
   if (denied) return denied;
-  const body = await request.json();
+  const parsed = await parseJson(request, settingsSchema);
+  if (!parsed.ok) return parsed.response;
   const settings = await prisma.siteSettings.upsert({
     where: { id: "default" },
-    update: {
-      initials: body.initials,
-      coupleNames: body.coupleNames,
-      weddingDate: body.weddingDate,
-      location: body.location,
-      heroImageUrl: body.heroImageUrl,
-      rsvpHeading: body.rsvpHeading,
-      bankingHeading: body.bankingHeading,
-    },
-    create: {
-      initials: body.initials,
-      coupleNames: body.coupleNames,
-      weddingDate: body.weddingDate,
-      location: body.location,
-      heroImageUrl: body.heroImageUrl,
-      rsvpHeading: body.rsvpHeading,
-      bankingHeading: body.bankingHeading,
-    },
+    update: parsed.data,
+    create: { id: "default", ...parsed.data },
   });
   return NextResponse.json(settings);
 }
