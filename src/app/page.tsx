@@ -4,7 +4,7 @@ import { getSessionUserId } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { EVENT_TYPES } from "@/lib/events/content";
 import { TEMPLATES } from "@/lib/events/templates";
-import { THEMES } from "@/lib/events/themes";
+import { THEMES, titleFont } from "@/lib/events/themes";
 
 const DEMO_SLUG = "demo-wedding";
 
@@ -183,7 +183,13 @@ export default async function HomePage() {
                       }}
                     >
                       <span
-                        className={`text-xl ${theme.scriptTitle ? "font-script" : "font-sans font-medium"}`}
+                        className="text-xl"
+                        style={{
+                          fontFamily: titleFont(theme),
+                          textTransform: theme.upperTitle
+                            ? "uppercase"
+                            : undefined,
+                        }}
                       >
                         {template.title}
                       </span>

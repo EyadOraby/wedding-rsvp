@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { EVENT_TYPES, type EventType } from "@/lib/events/content";
 import { TEMPLATES } from "@/lib/events/templates";
-import { THEMES } from "@/lib/events/themes";
+import { THEMES, titleFont } from "@/lib/events/themes";
 
 export function TemplatePicker() {
   const router = useRouter();
@@ -63,9 +63,8 @@ export function TemplatePicker() {
                   <span
                     className="mt-1 text-2xl"
                     style={{
-                      fontFamily: theme.scriptTitle
-                        ? "var(--font-great-vibes)"
-                        : "var(--font-inter)",
+                      fontFamily: titleFont(theme),
+                      textTransform: theme.upperTitle ? "uppercase" : undefined,
                     }}
                   >
                     {template.title}

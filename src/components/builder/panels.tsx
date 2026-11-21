@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import type { EventContent } from "@/lib/events/content";
-import { THEME_LIST, THEMES } from "@/lib/events/themes";
 import type { Update } from "./SectionsPanel";
 import { Field, TextField } from "./ui";
 
@@ -79,113 +78,6 @@ export function DetailsPanel({
         value={details.intro}
         maxLength={500}
         onChange={set("intro")}
-      />
-    </div>
-  );
-}
-
-export function DesignPanel({
-  content,
-  update,
-}: {
-  content: EventContent;
-  update: Update;
-}) {
-  const { theme, details } = content;
-  const accent = theme.accent || THEMES[theme.id].colors.accent;
-  return (
-    <div className="space-y-6">
-      <div>
-        <p className="app-label">Theme</p>
-        <div className="grid grid-cols-2 gap-3">
-          {THEME_LIST.map((t) => (
-            <button
-              key={t.id}
-              type="button"
-              aria-pressed={theme.id === t.id}
-              onClick={() =>
-                update((d) => {
-                  d.theme = { id: t.id, accent: "" };
-                })
-              }
-              className={`rounded-xl border p-3 text-left transition-shadow ${
-                theme.id === t.id
-                  ? "border-stone-900 ring-1 ring-stone-900"
-                  : "border-stone-200 hover:shadow"
-              }`}
-            >
-              <div
-                className="flex h-16 items-center justify-center rounded-lg"
-                style={{
-                  background: t.colors.background,
-                  color: t.colors.text,
-                }}
-              >
-                <span
-                  className="text-xl"
-                  style={{
-                    fontFamily: t.scriptTitle
-                      ? "var(--font-great-vibes)"
-                      : t.headingFont === "sans"
-                        ? "var(--font-inter)"
-                        : "var(--font-playfair)",
-                  }}
-                >
-                  Aa
-                </span>
-                <span
-                  className="ml-3 h-4 w-4 rounded-full"
-                  style={{ background: t.colors.accent }}
-                />
-              </div>
-              <p className="mt-2 text-sm font-medium">{t.name}</p>
-              <p className="text-xs text-stone-500">{t.description}</p>
-            </button>
-          ))}
-        </div>
-      </div>
-      <Field label="Accent colour" hint="Used for buttons and links.">
-        {(id) => (
-          <div className="flex items-center gap-3">
-            <input
-              id={id}
-              type="color"
-              value={accent}
-              onChange={(e) =>
-                update((d) => {
-                  d.theme.accent = e.target.value;
-                })
-              }
-              className="h-10 w-16 cursor-pointer rounded border border-stone-300"
-            />
-            <code className="text-sm text-stone-600">{accent}</code>
-            {theme.accent && (
-              <button
-                type="button"
-                onClick={() =>
-                  update((d) => {
-                    d.theme.accent = "";
-                  })
-                }
-                className="text-sm text-stone-600 underline"
-              >
-                Use theme colour
-              </button>
-            )}
-          </div>
-        )}
-      </Field>
-      <TextField
-        label="Cover image link (optional)"
-        type="url"
-        placeholder="https://…"
-        hint="A wide photo works best. Paste a link to an image that is already online."
-        value={details.heroImageUrl}
-        onChange={(v) =>
-          update((d) => {
-            d.details.heroImageUrl = v;
-          })
-        }
       />
     </div>
   );

@@ -10,7 +10,8 @@ import {
   slugSchema,
   type EventContent,
 } from "@/lib/events/content";
-import { DesignPanel, DetailsPanel, PublishPanel } from "./panels";
+import { DesignPanel } from "./DesignPanel";
+import { DetailsPanel, PublishPanel } from "./panels";
 import { RsvpPanel } from "./RsvpPanel";
 import { SectionsPanel, type Update } from "./SectionsPanel";
 
