@@ -64,7 +64,7 @@ A review of the finished builder found these weak spots. Each one is fixed in th
 | --- | ------------------------- | ------------------------------------------------------------------------------ | ----------- |
 | 9   | `chore/deploy-ready`      | Build script for Vercel, security headers, icon, error pages, round 2 plan     | Done        |
 | 10  | `feat/themes-and-layouts` | New themes and fonts, hero layouts, design presets, new templates              | Done        |
-| 11  | `feat/ui-polish`          | App shell and logo, dashboard cards, builder leave guard, landing page gallery | Not started |
+| 11  | `feat/ui-polish`          | App shell and logo, dashboard cards, builder leave guard, landing page gallery | Done        |
 | 12  | `feat/share-and-protect`  | Open Graph images, QR code, honeypot                                           | Not started |
 | 13  | `feat/account-settings`   | Change name and password, delete account, duplicate event                      | Not started |
 
