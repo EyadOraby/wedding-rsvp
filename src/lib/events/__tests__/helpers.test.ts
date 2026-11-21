@@ -67,7 +67,7 @@ describe("csv", () => {
 
   it("writes one column per question with readable answers", () => {
     const lines = repliesToCsv(content, replies)
-      .replace("﻿", "")
+      .replace("\ufeff", "")
       .trim()
       .split("\r\n");
     expect(lines[0]).toBe(
@@ -101,6 +101,8 @@ describe("slug", () => {
   it("makes URL-safe slugs", () => {
     expect(slugify("Café & Co!  Party")).toBe("cafe-co-party");
     expect(slugify("!!!")).toBe("");
+    expect(slugify("New Year's Eve")).toBe("new-years-eve");
+    expect(slugify("Maya\u2019s 30th")).toBe("mayas-30th");
   });
 
   it("adds a random suffix", () => {

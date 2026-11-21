@@ -40,7 +40,7 @@ export function repliesToCsv(
   });
   // The byte order mark makes Excel read the file as UTF-8.
   return (
-    "﻿" +
+    "\ufeff" +
     [header, ...rows].map((row) => row.map(csvCell).join(",")).join("\r\n") +
     "\r\n"
   );
