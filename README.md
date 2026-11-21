@@ -34,7 +34,8 @@ cp .env.example .env
 Edit `.env`:
 
 ```
-DATABASE_URL="postgresql://..."
+POSTGRES_PRISMA_URL="postgresql://..."        # pooled connection
+POSTGRES_URL_NON_POOLING="postgresql://..."   # direct connection
 ADMIN_PASSWORD="your-secret-password"
 ```
 
@@ -77,7 +78,7 @@ git push -u origin main
 ### 3. Add Postgres storage
 
 1. In your Vercel project → **Storage** → **Create Database** → **Postgres**
-2. Connect it to the project — Vercel sets `DATABASE_URL` automatically
+2. Connect it to the project — Vercel sets `POSTGRES_PRISMA_URL` and `POSTGRES_URL_NON_POOLING` automatically
 
 ### 4. Add environment variables
 
@@ -85,15 +86,16 @@ In **Project Settings → Environment Variables**, add:
 
 | Name | Value |
 |------|--------|
-| `DATABASE_URL` | (auto-set if using Vercel Postgres) |
+| `POSTGRES_PRISMA_URL` | (auto-set if using Vercel Postgres) |
+| `POSTGRES_URL_NON_POOLING` | (auto-set if using Vercel Postgres) |
 | `ADMIN_PASSWORD` | A strong password for `/admin` |
 
 ### 5. Deploy and initialize the database
 
-After the first deploy, run these once from your machine (with `DATABASE_URL` pointing to production, or use Vercel CLI):
+After the first deploy, run these once from your machine (with `POSTGRES_PRISMA_URL` and `POSTGRES_URL_NON_POOLING` pointing to production, or use Vercel CLI):
 
 ```bash
-npx vercel env pull .env.production
+npx vercel env pull .env   # Prisma and Next.js both read .env
 npx prisma db push
 npx prisma db seed
 ```
