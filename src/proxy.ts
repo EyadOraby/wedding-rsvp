@@ -28,7 +28,9 @@ export async function proxy(request: NextRequest) {
   }
 
   const needsAccount =
-    pathname.startsWith("/dashboard") || pathname.startsWith("/api/events");
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/api/events") ||
+    pathname.startsWith("/api/account");
   if (!needsAccount) return NextResponse.next();
 
   const userId = await verifyUserToken(

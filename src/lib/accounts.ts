@@ -6,17 +6,21 @@ const email = z
   .toLowerCase()
   .pipe(z.email("Please enter a valid email address").max(200));
 
+export const nameSchema = z
+  .string({ error: "Please enter your name" })
+  .trim()
+  .min(1, "Please enter your name")
+  .max(100, "Name must be 100 characters or fewer");
+
+export const passwordSchema = z
+  .string({ error: "Please choose a password" })
+  .min(8, "Use at least 8 characters")
+  .max(200, "Use 200 characters or fewer");
+
 export const signupSchema = z.object({
-  name: z
-    .string({ error: "Please enter your name" })
-    .trim()
-    .min(1, "Please enter your name")
-    .max(100, "Name must be 100 characters or fewer"),
+  name: nameSchema,
   email,
-  password: z
-    .string({ error: "Please choose a password" })
-    .min(8, "Use at least 8 characters")
-    .max(200, "Use 200 characters or fewer"),
+  password: passwordSchema,
   /** Hidden honeypot field; people leave it empty. */
   website: z.string().max(200).optional(),
 });
