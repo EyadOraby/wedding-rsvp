@@ -54,7 +54,21 @@ export function AuthForm({ mode, next }: { mode: Mode; next: string }) {
   return (
     <div className="app-card w-full max-w-sm p-8 shadow-sm">
       <h1 className="text-2xl font-semibold tracking-tight">{copy.title}</h1>
-      <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+      <form onSubmit={handleSubmit} className="relative mt-6 space-y-4">
+        {mode === "signup" && (
+          <>
+            {/* Hidden from people; bots that fill in every field get caught. */}
+            <div
+              aria-hidden="true"
+              className="absolute -left-[9999px] h-px w-px overflow-hidden"
+            >
+              <label>
+                Website
+                <input name="website" tabIndex={-1} autoComplete="off" />
+              </label>
+            </div>
+          </>
+        )}
         {mode === "signup" && (
           <div>
             <label htmlFor="name" className="app-label">

@@ -96,4 +96,15 @@ describe("POST /api/e/[slug]/rsvp", () => {
     expect((await post(attending)).status).toBe(429);
     expect((await post(attending, "other-event")).status).toBe(201);
   });
+
+  it("pretends to accept bot replies that fill the hidden field, but saves nothing", async () => {
+    const res = await post({ ...attending, website: "http://spam.example" });
+    expect(res.status).toBe(201);
+    expect(prisma.reply.create).not.toHaveBeenCalled();
+  });
+
+  it("ignores an empty hidden field", async () => {
+    expect((await post({ ...attending, website: "" })).status).toBe(201);
+    expect(prisma.reply.create).toHaveBeenCalledTimes(1);
+  });
 });

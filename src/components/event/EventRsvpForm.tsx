@@ -182,6 +182,7 @@ export function EventRsvpForm({ title, content, slug, closed }: Props) {
           name: form.get("name"),
           email: form.get("email") ?? null,
           message: form.get("message"),
+          website: form.get("website"),
           attending,
           guestCount: attending ? guestCount : 1,
           answers,
@@ -229,7 +230,17 @@ export function EventRsvpForm({ title, content, slug, closed }: Props) {
       {closed && !preview ? (
         <p className="text-center">Replies for this event are now closed.</p>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleSubmit} className="relative space-y-8">
+          {/* Hidden from people; bots that fill in every field get caught. */}
+          <div
+            aria-hidden="true"
+            className="absolute -left-[9999px] h-px w-px overflow-hidden"
+          >
+            <label>
+              Website
+              <input name="website" tabIndex={-1} autoComplete="off" />
+            </label>
+          </div>
           <div>
             <label htmlFor="rsvp-name" className="ev-kicker mb-1 block">
               Full name

@@ -17,6 +17,8 @@ export const signupSchema = z.object({
     .string({ error: "Please choose a password" })
     .min(8, "Use at least 8 characters")
     .max(200, "Use 200 characters or fewer"),
+  /** Hidden honeypot field; people leave it empty. */
+  website: z.string().max(200).optional(),
 });
 
 export const loginSchema = z.object({

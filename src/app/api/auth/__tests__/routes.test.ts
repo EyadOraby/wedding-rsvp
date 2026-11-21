@@ -56,6 +56,14 @@ describe("POST /api/auth/signup", () => {
     expect(prisma.user.create).not.toHaveBeenCalled();
   });
 
+  it("creates nothing when the hidden field is filled in", async () => {
+    prisma.user.findUnique.mockResolvedValue(null);
+    const res = await post(signup, { ...valid, website: "spam" });
+    expect(res.status).toBe(201);
+    expect(prisma.user.create).not.toHaveBeenCalled();
+    expect(auth.createUserSession).not.toHaveBeenCalled();
+  });
+
   it("rejects short passwords", async () => {
     const res = await post(signup, { ...valid, password: "short" });
     expect(res.status).toBe(400);

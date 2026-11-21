@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { validateReply } from "@/lib/events/answers";
 import { readEventContent } from "@/lib/events/content";
 import { isPastDeadline } from "@/lib/events/format";
+import { isHoneypotFilled } from "@/lib/honeypot";
 import { clientIp, rateLimit } from "@/lib/rate-limit";
 
 const HOUR = 60 * 60 * 1000;
@@ -47,6 +48,12 @@ export async function POST(
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
+  // The form has a hidden "website" field; only bots fill it in. Pretend it
+  // worked so they do not retry, but save nothing.
+  if (isHoneypotFilled(body)) {
+    return NextResponse.json({ success: true }, { status: 201 });
   }
 
   const result = validateReply(content, body);

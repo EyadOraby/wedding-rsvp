@@ -22,7 +22,9 @@ export async function POST(request: Request) {
 
   const parsed = await parseJson(request, signupSchema);
   if (!parsed.ok) return parsed.response;
-  const { name, email, password } = parsed.data;
+  const { name, email, password, website } = parsed.data;
+  // Only bots fill in the hidden field: answer as if it worked, create nothing.
+  if (website) return NextResponse.json({ success: true }, { status: 201 });
 
   const existing = await prisma.user.findUnique({
     where: { email },
