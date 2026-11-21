@@ -58,16 +58,17 @@ Each question has `required` and `showWhen` (`always` or `attending`). The reply
 
 ## Routes
 
-| Path                          | What it is                                                   |
-| ----------------------------- | ------------------------------------------------------------ |
-| `/`                           | Landing page for the builder                                 |
-| `/signup`, `/login`           | Accounts                                                     |
-| `/dashboard`                  | The signed-in user's events                                  |
-| `/dashboard/new`              | Pick a template; creates a draft event                       |
-| `/dashboard/events/[id]`      | Event dashboard: stats, breakdowns, responses, export, share |
-| `/dashboard/events/[id]/edit` | Builder with live preview                                    |
-| `/e/[slug]`                   | Public event page with the RSVP form                         |
-| `/e/[slug]/calendar`          | `.ics` file for the event                                    |
+| Path                          | What it is                                                                 |
+| ----------------------------- | -------------------------------------------------------------------------- |
+| `/`                           | Landing page for the builder                                               |
+| `/signup`, `/login`           | Accounts                                                                   |
+| `/dashboard`                  | The signed-in user's events                                                |
+| `/dashboard/new`              | Pick a template; creates a draft event                                     |
+| `/dashboard/events/[id]`      | Event dashboard: stats, breakdowns, responses, export, share               |
+| `/dashboard/events/[id]/edit` | Builder with live preview                                                  |
+| `/e/[slug]`                   | Public event page with the RSVP form                                       |
+| `/e/[slug]/calendar`          | `.ics` file for the event                                                  |
+| `/e/[slug]/opengraph-image`   | Link preview image in the colours of the event (a generic card for drafts) |
 
 API route handlers live under `/api/auth`, `/api/events` (owner only) and `/api/e/[slug]/rsvp` (public).
 
@@ -80,7 +81,8 @@ API route handlers live under `/api/auth`, `/api/events` (owner only) and `/api/
 - Passwords are hashed with scrypt and a random salt; comparisons run in constant time.
 - Sessions are signed JWTs (HS256, `SESSION_SECRET`) in an `httpOnly`, `sameSite=lax` cookie.
 - The proxy blocks cross-origin writes and redirects signed-out users away from `/dashboard`. Every owner route handler also checks the session and that the event belongs to the user.
-- Sign up, log in and RSVP submissions are rate-limited per IP.
+- Sign up, log in and RSVP submissions are rate-limited per IP, and their forms carry a hidden honeypot field: submissions that fill it in are answered as successful but not saved.
+- Security headers (`nosniff`, frame blocking, referrer and permissions policies) are sent on every response.
 - Unpublished events return 404 to the public. Event pages are not indexed by search engines.
 - CSV export guards against spreadsheet formula injection.
 

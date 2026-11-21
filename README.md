@@ -15,6 +15,7 @@ Hosts sign up, pick a template, choose a theme and the sections they want, build
 - **RSVP question builder:** single and multiple choice (with "Other"), yes/no, short and long answers; required or optional; asked of everyone or only guests who are coming
 - **Guest options:** party size limits, email off/optional/required, reply deadline, custom thank-you message, add-to-calendar file
 - **Event dashboard:** replies, coming, headcount, per-question counts, search and filters, delete, CSV export
+- **Sharing:** copy link, QR code for printed invitations, and link previews in the colours of the event for WhatsApp, iMessage and social apps
 - **Drafts and publishing:** pages stay private until published; owners can preview drafts
 - **Accounts** with hashed passwords, signed session cookies and rate-limited sign-in
 
