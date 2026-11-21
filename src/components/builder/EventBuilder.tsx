@@ -179,6 +179,17 @@ export function EventBuilder({ id, initial }: Props) {
         <div className="flex flex-wrap items-center gap-3 px-4 py-2">
           <Link
             href={`/dashboard/events/${id}`}
+            onClick={(e) => {
+              // beforeunload does not cover in-app navigation, so ask here too.
+              if (
+                state !== "saved" &&
+                !window.confirm(
+                  "You have unsaved changes. Leave without saving?",
+                )
+              ) {
+                e.preventDefault();
+              }
+            }}
             className="text-sm text-stone-600 hover:text-stone-900"
           >
             ← Back
