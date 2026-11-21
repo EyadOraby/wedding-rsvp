@@ -20,6 +20,7 @@
   --color-card: var(--card);
   --font-serif: var(--font-playfair);
   --font-script: var(--font-great-vibes);
+  --font-sans: var(--font-inter), system-ui, sans-serif;
 }
 
 body {
@@ -90,4 +91,34 @@ body {
 .input-field::placeholder {
   color: #999;
   font-style: italic;
+}
+
+/* Builder and dashboard UI */
+
+.app {
+  @apply min-h-screen bg-stone-50 font-sans text-stone-900;
+}
+
+.app-card {
+  @apply rounded-xl border border-stone-200 bg-white;
+}
+
+.app-label {
+  @apply mb-1 block text-sm font-medium text-stone-700;
+}
+
+.app-input {
+  @apply w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 outline-none placeholder:text-stone-400 focus:border-stone-900 focus:ring-1 focus:ring-stone-900;
+}
+
+.app-button {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg bg-stone-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-stone-700 disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+.app-button-secondary {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-800 transition-colors hover:bg-stone-100 disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+.app-error {
+  @apply rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700;
 }
