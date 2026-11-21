@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CopyLink } from "@/components/dashboard/CopyLink";
+import { KitchenSummary } from "@/components/dashboard/KitchenSummary";
+import { kitchenQuestions, kitchenRows } from "@/lib/events/csv";
 import { DuplicateButton } from "@/components/dashboard/DuplicateButton";
 import { ShareQr } from "@/components/dashboard/ShareQr";
 import { QuestionBreakdown } from "@/components/dashboard/QuestionBreakdown";
@@ -155,6 +157,12 @@ export default async function EventDashboardPage({ params }: Params) {
         />
         <Stat label="Not coming" value={stats.declined} />
       </section>
+
+      <KitchenSummary
+        eventId={event.id}
+        labels={kitchenQuestions(event.content).map((q) => q.label)}
+        rows={kitchenRows(event.content, replies)}
+      />
 
       {stats.questions.length > 0 && (
         <section className="mt-10" aria-labelledby="answers-heading">

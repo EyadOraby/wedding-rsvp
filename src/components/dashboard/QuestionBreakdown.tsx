@@ -1,4 +1,4 @@
-import type { QuestionStats } from "@/lib/events/stats";
+import type { NamedText, QuestionStats } from "@/lib/events/stats";
 
 const MAX_TEXTS = 5;
 
@@ -30,16 +30,17 @@ function Bar({
   );
 }
 
-function TextList({ items, label }: { items: string[]; label?: string }) {
+function TextList({ items, label }: { items: NamedText[]; label?: string }) {
   if (items.length === 0) return null;
   const shown = items.slice(-MAX_TEXTS).reverse();
   return (
     <div className="mt-3">
       {label && <p className="text-xs font-medium text-stone-500">{label}</p>}
       <ul className="mt-1 space-y-1 text-sm text-stone-700">
-        {shown.map((text, i) => (
+        {shown.map((item, i) => (
           <li key={i} className="rounded-md bg-stone-50 px-2 py-1">
-            {text}
+            {item.text}
+            <span className="text-stone-400"> · {item.name}</span>
           </li>
         ))}
       </ul>

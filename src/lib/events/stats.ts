@@ -18,7 +18,7 @@ export type QuestionStats =
       type: "single" | "multi";
       answered: number;
       options: { id: string; label: string; count: number }[];
-      other: string[];
+      other: NamedText[];
     }
   | {
       id: string;
@@ -33,7 +33,7 @@ export type QuestionStats =
       label: string;
       type: "text" | "longtext";
       answered: number;
-      texts: string[];
+      texts: NamedText[];
     };
 
 export type EventStats = {
@@ -43,6 +43,9 @@ export type EventStats = {
   headcount: number;
   questions: QuestionStats[];
 };
+
+/** A free-text answer and the guest who gave it. */
+export type NamedText = { name: string; text: string };
 
 export function answersOf(reply: Pick<ReplyLike, "answers">): Answers {
   const value = reply.answers;
@@ -93,8 +96,8 @@ function questionStats(
     case "single":
     case "multi": {
       const counts = new Map(question.options.map((o) => [o.id, 0]));
-      const other: string[] = [];
-      for (const a of all) {
+      const other: NamedText[] = [];
+      for (const [i, a] of all.entries()) {
         const value = a[question.id];
         const ids = Array.isArray(value)
           ? value
@@ -104,7 +107,9 @@ function questionStats(
         for (const id of ids)
           if (counts.has(id)) counts.set(id, counts.get(id)! + 1);
         const text = a[otherKey(question.id)];
-        if (typeof text === "string" && text) other.push(text);
+        if (typeof text === "string" && text) {
+          other.push({ name: replies[i].name, text });
+        }
       }
       return {
         id: question.id,
@@ -137,9 +142,12 @@ function questionStats(
         label: question.label,
         type: question.type,
         answered,
-        texts: all
-          .map((a) => a[question.id])
-          .filter((v): v is string => typeof v === "string" && v.length > 0),
+        texts: all.flatMap((a, i) => {
+          const text = a[question.id];
+          return typeof text === "string" && text
+            ? [{ name: replies[i].name, text }]
+            : [];
+        }),
       };
   }
 }

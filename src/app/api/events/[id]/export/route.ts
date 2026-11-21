@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { requireUserApi } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { repliesToCsv } from "@/lib/events/csv";
+import { kitchenToCsv, repliesToCsv } from "@/lib/events/csv";
 import { getOwnedEvent } from "@/lib/events/owner";
 
 /** Downloads every reply to the event as a CSV file. */
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const auth = await requireUserApi();
@@ -21,10 +21,15 @@ export async function GET(
     where: { eventId: event.id },
     orderBy: { createdAt: "asc" },
   });
-  return new Response(repliesToCsv(event.content, replies), {
+  // ?view=kitchen gives the caterer only guests who are coming and their food answers.
+  const kitchen = new URL(request.url).searchParams.get("view") === "kitchen";
+  const csv = kitchen
+    ? kitchenToCsv(event.content, replies)
+    : repliesToCsv(event.content, replies);
+  return new Response(csv, {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
-      "Content-Disposition": `attachment; filename="${event.slug}-replies.csv"`,
+      "Content-Disposition": `attachment; filename="${event.slug}-${kitchen ? "kitchen" : "replies"}.csv"`,
       "Cache-Control": "no-store",
     },
   });
