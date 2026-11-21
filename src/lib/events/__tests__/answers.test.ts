@@ -137,3 +137,18 @@ describe("validateReply", () => {
     ).toBe(false);
   });
 });
+
+describe("unanswered questions", () => {
+  it("are left out instead of stored empty", () => {
+    const result = validateReply(wedding(), {
+      name: "Sara",
+      attending: true,
+      answers: { q_meal: "opt_1", q_dietary: [], q_song: "" },
+    });
+    expect(result).toMatchObject({
+      ok: true,
+      data: { answers: { q_meal: "opt_1" } },
+    });
+    if (result.ok) expect(Object.keys(result.data.answers)).toEqual(["q_meal"]);
+  });
+});

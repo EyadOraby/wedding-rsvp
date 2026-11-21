@@ -107,7 +107,11 @@ function checkAnswer(
       if (question.required && selected.length === 0 && !other) {
         return { error: missing };
       }
-      return { value: selected, other: other || undefined };
+      // Leave unanswered questions out so they do not count as answered.
+      return {
+        value: selected.length > 0 ? selected : undefined,
+        other: other || undefined,
+      };
     }
     case "yesno": {
       if (raw === undefined || raw === null) {
