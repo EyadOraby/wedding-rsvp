@@ -20,7 +20,15 @@ const greatVibes = Great_Vibes({
   weight: "400",
 });
 
+/** Absolute base for share links and preview images. Vercel sets the production URL. */
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: `${APP_NAME} · RSVP pages for any event`,
   description:
     "Create a beautiful RSVP page for your wedding, birthday or party, collect replies and see who is coming.",
