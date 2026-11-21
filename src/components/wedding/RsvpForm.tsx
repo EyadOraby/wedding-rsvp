@@ -37,6 +37,7 @@ export function RsvpForm({ heading, meals, dietary }: RsvpFormProps) {
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (status === "loading") return;
     setStatus("loading");
     setErrorMsg("");
 
@@ -71,12 +72,10 @@ export function RsvpForm({ heading, meals, dietary }: RsvpFormProps) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Submission failed");
 
+      // The success view replaces the form, so there is nothing to reset here.
+      // (React clears e.currentTarget once the handler yields, so touching the
+      // form after an await would throw and wrongly show an error.)
       setStatus("success");
-      e.currentTarget.reset();
-      setAttending(null);
-      setMealId("");
-      setSelectedDietary([]);
-      setDietaryOther("");
     } catch (err) {
       setStatus("error");
       setErrorMsg(err instanceof Error ? err.message : "Something went wrong");
@@ -139,6 +138,7 @@ export function RsvpForm({ heading, meals, dietary }: RsvpFormProps) {
               <button
                 key={String(opt.value)}
                 type="button"
+                aria-pressed={attending === opt.value}
                 onClick={() => setAttending(opt.value)}
                 className={`px-5 py-2 text-sm tracking-widest uppercase border transition-colors ${
                   attending === opt.value
@@ -262,7 +262,9 @@ export function RsvpForm({ heading, meals, dietary }: RsvpFormProps) {
         </label>
 
         {status === "error" && errorMsg && (
-          <p className="text-center text-sm text-red-700">{errorMsg}</p>
+          <p role="alert" className="text-center text-sm text-red-700">
+            {errorMsg}
+          </p>
         )}
 
         <div className="text-center pt-4">
