@@ -12,6 +12,17 @@ type Props = {
   /** Public slug; omitted in the builder preview, where nothing is sent. */
   slug?: string;
   closed?: boolean;
+  /** Editing an existing reply from its private link. */
+  editToken?: string;
+  /** Values to start from, e.g. the reply being edited. */
+  initial?: {
+    name: string;
+    email: string;
+    message: string;
+    attending: boolean | null;
+    guestCount: number;
+    answers: Answers;
+  };
 };
 
 type Status = "idle" | "sending" | "sent" | "error";
@@ -145,12 +156,23 @@ function QuestionField({
   }
 }
 
-export function EventRsvpForm({ title, content, slug, closed }: Props) {
+export function EventRsvpForm({
+  title,
+  content,
+  slug,
+  closed,
+  editToken,
+  initial,
+}: Props) {
   const { rsvp } = content;
   const section = content.sections.find((s) => s.type === "rsvp");
-  const [attending, setAttending] = useState<boolean | null>(null);
-  const [guestCount, setGuestCount] = useState(1);
-  const [answers, setAnswers] = useState<Answers>({});
+  const [attending, setAttending] = useState<boolean | null>(
+    initial?.attending ?? null,
+  );
+  const [guestCount, setGuestCount] = useState(initial?.guestCount ?? 1);
+  const [answers, setAnswers] = useState<Answers>(initial?.answers ?? {});
+  const [editPath, setEditPath] = useState("");
+  const [copied, setCopied] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
   const preview = !slug;
@@ -175,21 +197,25 @@ export function EventRsvpForm({ title, content, slug, closed }: Props) {
     setStatus("sending");
     setError("");
     try {
-      const res = await fetch(`/api/e/${slug}/rsvp`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.get("name"),
-          email: form.get("email") ?? null,
-          message: form.get("message"),
-          website: form.get("website"),
-          attending,
-          guestCount: attending ? guestCount : 1,
-          answers,
-        }),
-      });
+      const res = await fetch(
+        editToken ? `/api/e/${slug}/reply/${editToken}` : `/api/e/${slug}/rsvp`,
+        {
+          method: editToken ? "PATCH" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: form.get("name"),
+            email: form.get("email") ?? null,
+            message: form.get("message"),
+            website: form.get("website"),
+            attending,
+            guestCount: attending ? guestCount : 1,
+            answers,
+          }),
+        },
+      );
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Something went wrong");
+      if (data.editPath) setEditPath(data.editPath);
       setStatus("sent");
     } catch (err) {
       setStatus("error");
@@ -200,10 +226,29 @@ export function EventRsvpForm({ title, content, slug, closed }: Props) {
   if (status === "sent") {
     return (
       <div className="text-center" role="status">
-        <SectionTitle>Thank you</SectionTitle>
+        <SectionTitle>{editToken ? "Updated" : "Thank you"}</SectionTitle>
         <p className="leading-relaxed">
-          {rsvp.thankYouMessage || "Your reply has been received."}
+          {editToken
+            ? "Your changes are saved."
+            : rsvp.thankYouMessage || "Your reply has been received."}
         </p>
+        {editPath && (
+          <div className="ev-card mx-auto mt-6 max-w-md p-4 text-sm">
+            <p>Need to change something later? Keep this private link:</p>
+            <button
+              type="button"
+              onClick={async () => {
+                await navigator.clipboard.writeText(
+                  window.location.origin + editPath,
+                );
+                setCopied(true);
+              }}
+              className="ev-link mt-2 break-all"
+            >
+              {copied ? "Link copied" : "Copy my edit link"}
+            </button>
+          </div>
+        )}
         {content.details.date && (
           <a
             href={`/e/${slug}/calendar`}
@@ -249,6 +294,7 @@ export function EventRsvpForm({ title, content, slug, closed }: Props) {
             <input
               id="rsvp-name"
               name="name"
+              defaultValue={initial?.name}
               required
               maxLength={100}
               autoComplete="name"
@@ -267,6 +313,7 @@ export function EventRsvpForm({ title, content, slug, closed }: Props) {
                 id="rsvp-email"
                 name="email"
                 type="email"
+                defaultValue={initial?.email}
                 required={rsvp.collectEmail === "required"}
                 maxLength={200}
                 autoComplete="email"
@@ -336,6 +383,7 @@ export function EventRsvpForm({ title, content, slug, closed }: Props) {
             <textarea
               id="rsvp-message"
               name="message"
+              defaultValue={initial?.message}
               rows={2}
               maxLength={1000}
               className="ev-input"
@@ -354,7 +402,11 @@ export function EventRsvpForm({ title, content, slug, closed }: Props) {
               disabled={preview || status === "sending"}
               className="ev-button"
             >
-              {status === "sending" ? "Sending…" : "Send reply"}
+              {status === "sending"
+                ? "Sending…"
+                : editToken
+                  ? "Save changes"
+                  : "Send reply"}
             </button>
             {preview && (
               <p className="ev-muted mt-3 text-xs">
