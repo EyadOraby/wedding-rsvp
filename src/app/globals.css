@@ -122,3 +122,131 @@ body {
 .app-error {
   @apply rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700;
 }
+
+/* Event pages: colours and fonts come from the theme variables */
+
+.ev {
+  background: var(--ev-bg);
+  color: var(--ev-text);
+  font-family: var(--ev-heading-font);
+}
+
+.ev-title {
+  font-family: var(--ev-title-font);
+}
+
+.ev-muted {
+  color: var(--ev-muted);
+}
+
+.ev-kicker {
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: var(--ev-muted);
+}
+
+.ev-section-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.ev-section-title::before,
+.ev-section-title::after {
+  content: "";
+  flex: 1;
+  border-top: 1px solid var(--ev-line);
+}
+
+.ev-card {
+  background: var(--ev-surface);
+  border: 1px solid color-mix(in srgb, var(--ev-line) 45%, transparent);
+  border-radius: 0.75rem;
+}
+
+.ev-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: var(--ev-accent);
+  color: var(--ev-on-accent);
+  padding: 0.75rem 2rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: opacity 0.2s;
+}
+
+.ev-button:hover {
+  opacity: 0.9;
+}
+
+.ev-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.ev-link {
+  color: var(--ev-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ev-input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--ev-line);
+  background: transparent;
+  padding: 0.5rem 0;
+  color: inherit;
+  font: inherit;
+  outline: none;
+}
+
+.ev-input:focus {
+  border-bottom-color: var(--ev-accent);
+}
+
+.ev-input::placeholder {
+  color: var(--ev-muted);
+  opacity: 0.7;
+}
+
+.ev-choice {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border: 1px solid color-mix(in srgb, var(--ev-line) 60%, transparent);
+  border-radius: 0.5rem;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+}
+
+.ev-choice:has(input:checked) {
+  border-color: var(--ev-accent);
+  box-shadow: 0 0 0 1px var(--ev-accent);
+}
+
+.ev-choice input {
+  accent-color: var(--ev-accent);
+}
+
+.ev-toggle {
+  border: 1px solid var(--ev-line);
+  border-radius: 9999px;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.ev-toggle[aria-pressed="true"] {
+  border-color: var(--ev-accent);
+  background: var(--ev-accent);
+  color: var(--ev-on-accent);
+}
