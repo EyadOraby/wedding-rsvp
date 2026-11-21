@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 
 export async function GET() {
+  const denied = await requireAdmin();
+  if (denied) return denied;
   const banking = await prisma.bankingInfo.findUnique({
     where: { id: "default" },
   });
@@ -9,6 +12,8 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
   const body = await request.json();
   const banking = await prisma.bankingInfo.upsert({
     where: { id: "default" },

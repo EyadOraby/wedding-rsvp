@@ -1,51 +1,50 @@
-import { SignJWT, jwtVerify } from "jose";
+import { createHash, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
+import {
+  SESSION_COOKIE,
+  SESSION_MAX_AGE_SECONDS,
+  signSessionToken,
+  verifySessionToken,
+} from "./session";
 
-const COOKIE_NAME = "wedding_admin_session";
-
-function getSecret() {
-  const secret = process.env.ADMIN_PASSWORD;
-  if (!secret) throw new Error("ADMIN_PASSWORD is not set");
-  return new TextEncoder().encode(secret);
-}
-
-export async function createAdminSession() {
-  const token = await new SignJWT({ role: "admin" })
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setExpirationTime("7d")
-    .sign(getSecret());
-
+export async function createAdminSession(): Promise<void> {
+  const token = await signSessionToken();
   const cookieStore = await cookies();
-  cookieStore.set(COOKIE_NAME, token, {
+  cookieStore.set(SESSION_COOKIE, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    maxAge: 60 * 60 * 24 * 7,
+    maxAge: SESSION_MAX_AGE_SECONDS,
   });
 }
 
-export async function clearAdminSession() {
+export async function clearAdminSession(): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.delete(COOKIE_NAME);
+  cookieStore.delete(SESSION_COOKIE);
 }
 
 export async function isAdminAuthenticated(): Promise<boolean> {
   const cookieStore = await cookies();
-  const token = cookieStore.get(COOKIE_NAME)?.value;
-  if (!token) return false;
-
-  try {
-    await jwtVerify(token, getSecret());
-    return true;
-  } catch {
-    return false;
-  }
+  return verifySessionToken(cookieStore.get(SESSION_COOKIE)?.value);
 }
 
-export function verifyAdminPassword(password: string): boolean {
+/**
+ * Returns a 401 response when the caller is not signed in, or null when the
+ * request may continue. Every admin route handler calls this, so access does
+ * not depend on the proxy alone.
+ */
+export async function requireAdmin(): Promise<NextResponse | null> {
+  if (await isAdminAuthenticated()) return null;
+  return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+}
+
+/** Compares in constant time so response timing does not leak the password. */
+export function verifyAdminPassword(password: unknown): boolean {
   const expected = process.env.ADMIN_PASSWORD;
-  if (!expected) return false;
-  return password === expected;
+  if (!expected || typeof password !== "string") return false;
+  const given = createHash("sha256").update(password).digest();
+  const actual = createHash("sha256").update(expected).digest();
+  return timingSafeEqual(given, actual);
 }

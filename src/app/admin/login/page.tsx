@@ -25,7 +25,8 @@ export default function AdminLoginPage() {
       router.push("/admin");
       router.refresh();
     } else {
-      setError("Invalid password");
+      const data = await res.json().catch(() => ({}));
+      setError(data.error ?? "Invalid password");
       setLoading(false);
     }
   }
@@ -50,7 +51,9 @@ export default function AdminLoginPage() {
           />
         </label>
         {error && (
-          <p className="text-sm text-red-700 text-center mb-4">{error}</p>
+          <p role="alert" className="text-sm text-red-700 text-center mb-4">
+            {error}
+          </p>
         )}
         <button
           type="submit"

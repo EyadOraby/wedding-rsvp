@@ -37,6 +37,7 @@ Edit `.env`:
 POSTGRES_PRISMA_URL="postgresql://..."        # pooled connection
 POSTGRES_URL_NON_POOLING="postgresql://..."   # direct connection
 ADMIN_PASSWORD="your-secret-password"
+SESSION_SECRET="..."   # 32+ random characters: openssl rand -base64 48
 ```
 
 ### 3. Create tables and seed data
@@ -84,11 +85,12 @@ git push -u origin main
 
 In **Project Settings → Environment Variables**, add:
 
-| Name                       | Value                               |
-| -------------------------- | ----------------------------------- |
-| `POSTGRES_PRISMA_URL`      | (auto-set if using Vercel Postgres) |
-| `POSTGRES_URL_NON_POOLING` | (auto-set if using Vercel Postgres) |
-| `ADMIN_PASSWORD`           | A strong password for `/admin`      |
+| Name                       | Value                                             |
+| -------------------------- | ------------------------------------------------- |
+| `POSTGRES_PRISMA_URL`      | (auto-set if using Vercel Postgres)               |
+| `POSTGRES_URL_NON_POOLING` | (auto-set if using Vercel Postgres)               |
+| `ADMIN_PASSWORD`           | A strong password for `/admin`                    |
+| `SESSION_SECRET`           | 32+ random characters (`openssl rand -base64 48`) |
 
 ### 5. Deploy and initialize the database
 
