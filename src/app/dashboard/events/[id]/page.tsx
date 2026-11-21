@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CopyLink } from "@/components/dashboard/CopyLink";
+import { DuplicateButton } from "@/components/dashboard/DuplicateButton";
 import { ShareQr } from "@/components/dashboard/ShareQr";
 import { QuestionBreakdown } from "@/components/dashboard/QuestionBreakdown";
 import { RepliesTable } from "@/components/dashboard/RepliesTable";
@@ -82,6 +83,7 @@ export default async function EventDashboardPage({ params }: Params) {
           )}
         </div>
         <div className="flex flex-wrap gap-2">
+          <DuplicateButton eventId={event.id} />
           <a
             href={`/api/events/${event.id}/export`}
             className="app-button-secondary"
