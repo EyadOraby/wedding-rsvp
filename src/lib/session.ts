@@ -41,3 +41,31 @@ export async function verifySessionToken(
     return false;
   }
 }
+
+/* Builder accounts: one session per signed-in user. */
+
+export const USER_SESSION_COOKIE = "rsvp_session";
+
+export async function signUserToken(userId: string): Promise<string> {
+  return new SignJWT({ role: "user" })
+    .setProtectedHeader({ alg: "HS256" })
+    .setSubject(userId)
+    .setIssuedAt()
+    .setExpirationTime(`${SESSION_MAX_AGE_SECONDS}s`)
+    .sign(getSessionSecret());
+}
+
+/** Returns the user id from a valid token, or null. */
+export async function verifyUserToken(
+  token: string | undefined,
+): Promise<string | null> {
+  if (!token) return null;
+  try {
+    const { payload } = await jwtVerify(token, getSessionSecret(), {
+      algorithms: ["HS256"],
+    });
+    return payload.role === "user" && payload.sub ? payload.sub : null;
+  } catch {
+    return null;
+  }
+}
