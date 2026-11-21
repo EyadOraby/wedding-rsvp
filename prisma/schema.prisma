@@ -62,3 +62,48 @@ model Rsvp {
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 }
+
+// RSVP builder: users create events, guests reply to them.
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  events       Event[]
+}
+
+model Event {
+  id        String   @id @default(cuid())
+  ownerId   String
+  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  slug      String   @unique
+  type      String
+  title     String
+  published Boolean  @default(false)
+  /// Details, theme, sections and RSVP questions; see src/lib/events/content.ts
+  content   Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  replies   Reply[]
+
+  @@index([ownerId])
+}
+
+model Reply {
+  id         String   @id @default(cuid())
+  eventId    String
+  event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name       String
+  email      String?
+  attending  Boolean
+  guestCount Int
+  message    String?
+  /// Answers keyed by question id; see src/lib/events/answers.ts
+  answers    Json     @default("{}")
+  createdAt  DateTime @default(now())
+
+  @@index([eventId, createdAt])
+}
