@@ -38,6 +38,16 @@ Things to know before relying on free plans:
 
 Every push to `main` redeploys, and every pull request gets its own preview URL.
 
+## Email (optional)
+
+Guests who give an email get a confirmation with their private edit link, and hosts get an alert for each new reply (each event can turn this off in the builder). Email is sent with [Resend](https://resend.com); its free plan is enough for a portfolio.
+
+1. Create a Resend account and an API key.
+2. In Vercel, add `RESEND_API_KEY` to the environment variables and redeploy.
+3. Until you verify a domain in Resend, emails come from `onboarding@resend.dev` and only reach the address of your Resend account. To email real guests, verify a domain in Resend and set `EMAIL_FROM`, for example `RSVP Studio <rsvp@yourdomain.com>`.
+
+Without `RESEND_API_KEY` nothing is sent and the app works exactly the same.
+
 ## Showcasing to clients
 
 - Add a demo event with sample replies so the dashboard has something to show. `npm run db:seed` creates one locally; run it against a separate demo database rather than real data.
