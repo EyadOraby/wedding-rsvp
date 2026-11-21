@@ -85,6 +85,12 @@ export default async function EventDashboardPage({ params }: Params) {
           )}
         </div>
         <div className="flex flex-wrap gap-2">
+          <Link
+            href={`/dashboard/events/${event.id}/guests`}
+            className="app-button-secondary"
+          >
+            Guest list
+          </Link>
           <DuplicateButton eventId={event.id} />
           <a
             href={`/api/events/${event.id}/export`}
