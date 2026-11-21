@@ -17,25 +17,26 @@ Things to know before relying on free plans:
 
 ## Steps
 
-1. **Database:** create a Neon project. Copy the **pooled** connection string and the **direct** one.
-2. **Vercel:** import the GitHub repository at [vercel.com/new](https://vercel.com/new). The framework is detected as Next.js.
-3. **Environment variables** (Project Settings → Environment Variables):
+1. **Import the repository** at [vercel.com/new](https://vercel.com/new) (sign in with GitHub). The framework is detected as Next.js; keep the defaults.
+2. **Add the database:** in the Vercel project, open **Storage → Create Database → Neon** and connect it to the project. This creates a free Neon database and sets `POSTGRES_PRISMA_URL`, `POSTGRES_URL_NON_POOLING` and related variables for you.
+3. **Add the session secret** in **Settings → Environment Variables**:
 
-   | Name                       | Value                                             |
-   | -------------------------- | ------------------------------------------------- |
-   | `POSTGRES_PRISMA_URL`      | Neon pooled connection string                     |
-   | `POSTGRES_URL_NON_POOLING` | Neon direct connection string                     |
-   | `SESSION_SECRET`           | 32+ random characters (`openssl rand -base64 48`) |
+   | Name                   | Value                                                         |
+   | ---------------------- | ------------------------------------------------------------- |
+   | `SESSION_SECRET`       | 32+ random characters (`openssl rand -base64 48`)             |
+   | `NEXT_PUBLIC_SITE_URL` | Optional: your custom domain, e.g. `https://rsvp.example.com` |
 
-   Neon is also available from the Vercel Storage tab, which sets the two database variables for you.
-
-4. **Create the tables** once, from your machine, with the production values in `.env`:
+4. **Deploy** (Deployments → Redeploy, or push to `main`). The `vercel-build` script runs `prisma db push` before building, so the tables are created on the first deploy and kept in step with the schema afterwards. A change that would drop data stops the build instead of running.
+5. **Optional demo data:** to show a sample event on the landing page, run the seed against the production database once from your machine:
 
    ```bash
-   npx prisma db push
+   npx vercel env pull .env.production.local
+   npx tsx --env-file=.env.production.local prisma/seed.ts
    ```
 
-5. **Deploy.** Every push to `main` redeploys; every pull request gets its own preview URL.
+   Or sign up on the live site and create a real example event.
+
+Every push to `main` redeploys, and every pull request gets its own preview URL.
 
 ## Showcasing to clients
 
