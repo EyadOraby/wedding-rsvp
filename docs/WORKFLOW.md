@@ -25,7 +25,7 @@ Then read the status table, set up `.env` (see the README), and continue with th
   npm run format:check && npm run lint && npm run typecheck && npm test && npm run build
   ```
 
-- The app must build and run at the end of every phase. The old single-wedding site keeps working until phase 7 replaces it.
+- The app must build and run at the end of every phase. (The old single-wedding site kept working until phase 7 replaced it.)
 
 ## Phases
 
@@ -37,7 +37,7 @@ Then read the status table, set up `.env` (see the README), and continue with th
 | 4   | `feat/public-event-page`            | `/e/[slug]` rendered from the content schema; themes; sections; dynamic RSVP form and API; add-to-calendar file                                                           | Done        |
 | 5   | `feat/event-builder`                | Create an event from a template; builder with live preview (details, design, sections, RSVP form, publish)                                                                | Done        |
 | 6   | `feat/event-dashboard`              | Headcount stats, per-question breakdowns, searchable responses table, delete, CSV export, share link                                                                      | Done        |
-| 7   | `refactor/remove-single-event-site` | Builder landing page at `/`; remove the old single-wedding site, admin and models; demo seed; README                                                                      | Not started |
+| 7   | `refactor/remove-single-event-site` | Builder landing page at `/`; remove the old single-wedding site, admin and models; demo seed; README                                                                      | Done        |
 | 8   | Deploy                              | Vercel + Neon, following [DEPLOYMENT.md](DEPLOYMENT.md) (needs the owner's accounts)                                                                                      | Not started |
 
 ## Backlog
