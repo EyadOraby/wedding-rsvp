@@ -3,6 +3,7 @@ import { randomBytes } from "node:crypto";
 import { PrismaClient } from "@prisma/client";
 import { hashPassword } from "../src/lib/password";
 import { buildFromTemplate } from "../src/lib/events/templates";
+import { newToken } from "../src/lib/events/tokens";
 
 /**
  * Creates a demo host with a published wedding and sample replies, so the
@@ -105,9 +106,32 @@ async function main() {
       message: "Sorry to miss it, sending love.",
     },
   ];
-  await prisma.reply.createMany({
-    data: replies.map((reply) => ({ ...reply, eventId: event.id })),
-  });
+  // A guest list: everyone who replied was invited, plus two still waiting.
+  const guests = [
+    ...replies.map((r) => ({
+      name: r.name,
+      email: r.email,
+      maxGuests: r.guestCount || 1,
+    })),
+    { name: "Dina Farouk", email: "dina@example.com", maxGuests: 2 },
+    { name: "Tarek Nabil", email: null, maxGuests: 1 },
+  ];
+  for (const guest of guests) {
+    const invite = await prisma.invite.create({
+      data: { ...guest, eventId: event.id, token: newToken() },
+    });
+    const reply = replies.find((r) => r.name === guest.name);
+    if (reply) {
+      await prisma.reply.create({
+        data: {
+          ...reply,
+          eventId: event.id,
+          inviteId: invite.id,
+          editToken: newToken(),
+        },
+      });
+    }
+  }
 
   const birthday = buildFromTemplate("birthday");
   await prisma.event.create({
