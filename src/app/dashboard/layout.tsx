@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Logo } from "@/components/app/Logo";
 import { LogoutButton } from "@/components/app/LogoutButton";
 import { requireUserPage } from "@/lib/auth";
@@ -17,9 +18,12 @@ export default async function DashboardLayout({
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
           <Logo href="/dashboard" />
           <div className="flex items-center gap-4">
-            <span className="hidden text-sm text-stone-600 sm:inline">
+            <Link
+              href="/dashboard/account"
+              className="hidden text-sm text-stone-600 hover:text-stone-900 sm:inline"
+            >
               {user.name}
-            </span>
+            </Link>
             <LogoutButton />
           </div>
         </div>
