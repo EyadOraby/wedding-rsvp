@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CopyLink } from "@/components/dashboard/CopyLink";
+import { ShareQr } from "@/components/dashboard/ShareQr";
 import { QuestionBreakdown } from "@/components/dashboard/QuestionBreakdown";
 import { RepliesTable } from "@/components/dashboard/RepliesTable";
 import { APP_NAME } from "@/config/app";
@@ -110,7 +111,16 @@ export default async function EventDashboardPage({ params }: Params) {
             <p className="mb-3 text-sm font-medium">
               Share this link with your guests
             </p>
-            <CopyLink path={`/e/${event.slug}`} />
+            <div className="flex flex-wrap items-center gap-6">
+              <div className="min-w-0 flex-1">
+                <CopyLink path={`/e/${event.slug}`} />
+                <p className="mt-3 text-xs text-stone-500">
+                  Print the QR code on invitations so guests can reply from
+                  their phone.
+                </p>
+              </div>
+              <ShareQr path={`/e/${event.slug}`} slug={event.slug} />
+            </div>
           </>
         ) : (
           <p className="text-sm text-stone-600">
