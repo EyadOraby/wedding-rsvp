@@ -63,7 +63,7 @@ describe("rsvpSchema", () => {
 describe("settingsSchema", () => {
   const settings = {
     initials: "J & Y",
-    coupleNames: "Jordan & Yossef",
+    coupleNames: "Alex & Sam",
     weddingDate: "November 21, 2026",
     location: "Cairo, Egypt",
     rsvpHeading: "RSVP",

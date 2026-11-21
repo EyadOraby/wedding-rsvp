@@ -1,83 +1,43 @@
 import { PrismaClient } from "@prisma/client";
+import { weddingDefaults } from "../src/config/wedding";
 
 const prisma = new PrismaClient();
 
+/** Idempotent: safe to run again; existing rows are left untouched. */
 async function main() {
   await prisma.siteSettings.upsert({
     where: { id: "default" },
     update: {},
-    create: {
-      initials: "J & Y",
-      coupleNames: "JORDAN & YOSSEF",
-      weddingDate: "NOVEMBER 21, 2026",
-      location: "FRANSCHHOEK, SOUTH AFRICA",
-      rsvpHeading: "RSVP",
-      bankingHeading: "GIFTING",
-    },
+    create: { id: "default", ...weddingDefaults.site },
   });
 
   await prisma.bankingInfo.upsert({
     where: { id: "default" },
     update: {},
-    create: {
-      accountName: "Jordan & Yossef",
-      bankName: "Your Bank Name",
-      accountNumber: "0000000000",
-      branchCode: "000000",
-      notes: "Please use your name as the payment reference.",
-      active: true,
-    },
+    create: { id: "default", ...weddingDefaults.banking },
   });
 
-  const meals = [
-    {
-      title: "Fresh Cape line fish",
-      description:
-        "Garlic bay chili velouté, crispy potatoes, lemony charred greens and salsa verde oil.",
-      sortOrder: 0,
-    },
-    {
-      title: "Middle Eastern melanzane",
-      description:
-        "Tahini, sumac onion, parsley, crispy potatoes, lemony charred greens and salsa verde oil.",
-      tag: "VG",
-      sortOrder: 1,
-    },
-  ];
-
-  for (const meal of meals) {
+  for (const [sortOrder, meal] of weddingDefaults.meals.entries()) {
     const existing = await prisma.mealOption.findFirst({
       where: { title: meal.title },
     });
     if (!existing) {
-      await prisma.mealOption.create({ data: meal });
+      await prisma.mealOption.create({ data: { ...meal, sortOrder } });
     }
   }
 
-  const dietary = [
-    "Vegetarian",
-    "Vegan",
-    "Halal",
-    "Kosher",
-    "Gluten free",
-    "Nut allergy",
-  ];
-
-  for (let i = 0; i < dietary.length; i++) {
-    const label = dietary[i];
+  for (const [sortOrder, label] of weddingDefaults.dietary.entries()) {
     const existing = await prisma.dietaryOption.findFirst({ where: { label } });
     if (!existing) {
-      await prisma.dietaryOption.create({
-        data: { label, sortOrder: i },
-      });
+      await prisma.dietaryOption.create({ data: { label, sortOrder } });
     }
   }
 }
 
 main()
   .then(() => prisma.$disconnect())
-  .catch(async (e) => {
-    console.error(e);
+  .catch(async (error) => {
+    console.error(error);
     await prisma.$disconnect();
     process.exit(1);
   });

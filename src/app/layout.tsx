@@ -17,6 +17,8 @@ const greatVibes = Great_Vibes({
 export const metadata: Metadata = {
   title: "Wedding RSVP",
   description: "RSVP for our wedding celebration",
+  // A private event page: keep it out of search results.
+  robots: { index: false, follow: false },
 };
 
 export default function RootLayout({

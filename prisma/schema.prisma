@@ -10,10 +10,10 @@ datasource db {
 
 model SiteSettings {
   id             String   @id @default("default")
-  initials       String   @default("J & Y")
-  coupleNames    String   @default("JORDAN & YOSSEF")
-  weddingDate    String   @default("NOVEMBER 21, 2026")
-  location       String   @default("FRANSCHHOEK, SOUTH AFRICA")
+  initials       String   @default("A & S")
+  coupleNames    String   @default("ALEX & SAM")
+  weddingDate    String   @default("SATURDAY, JUNE 12, 2027")
+  location       String   @default("CAIRO, EGYPT")
   heroImageUrl   String?
   rsvpHeading    String   @default("RSVP")
   bankingHeading String   @default("GIFTING")
