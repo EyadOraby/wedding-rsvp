@@ -123,6 +123,9 @@ describe("themes", () => {
   it("picks readable text for the accent colour", () => {
     expect(readableOn("#ffffff")).toBe("#111111");
     expect(readableOn("#0f1a2e")).toBe("#ffffff");
+    // Mid-tone accents read better with dark text (5.8:1) than white (3.3:1).
+    expect(readableOn("#b87d8a")).toBe("#111111");
+    expect(readableOn("#c9a24b")).toBe("#111111");
   });
 
   it("uses the custom accent when set", () => {

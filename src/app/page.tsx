@@ -75,7 +75,7 @@ function MiniHero({
         {title}
       </span>
       <span
-        className="mt-3 rounded-full px-3 py-1 text-[9px] uppercase tracking-[0.2em]"
+        className="mt-3 rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em]"
         style={{
           background: accent || theme.colors.accent,
           color: readableOn(accent || theme.colors.accent),
@@ -198,8 +198,8 @@ export default async function HomePage() {
                 ))}
               </div>
               <span
-                className="mt-6 inline-block rounded-full px-6 py-2 font-serif text-xs uppercase tracking-[0.2em] text-white"
-                style={{ background: THEMES.classic.colors.accent }}
+                className="mt-6 inline-block rounded-full px-6 py-2 font-serif text-xs uppercase tracking-[0.2em]"
+                style={{ background: THEMES.classic.colors.accent, color: readableOn(THEMES.classic.colors.accent) }}
               >
                 Send reply
               </span>

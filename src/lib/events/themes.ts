@@ -250,7 +250,11 @@ function luminance(hex: string): number {
 
 /** Text colour that stays readable on top of the given background colour. */
 export function readableOn(hex: string): string {
-  return luminance(hex) > 0.4 ? "#111111" : "#ffffff";
+  // Pick whichever of near-black or white has the higher WCAG contrast ratio.
+  const l = luminance(hex);
+  const onWhite = 1.05 / (l + 0.05);
+  const onDark = (l + 0.05) / (luminance("#111111") + 0.05);
+  return onDark >= onWhite ? "#111111" : "#ffffff";
 }
 
 /** CSS variables that the event page components read. */
