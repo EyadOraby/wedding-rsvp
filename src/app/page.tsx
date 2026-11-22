@@ -199,7 +199,10 @@ export default async function HomePage() {
               </div>
               <span
                 className="mt-6 inline-block rounded-full px-6 py-2 font-serif text-xs uppercase tracking-[0.2em]"
-                style={{ background: THEMES.classic.colors.accent, color: readableOn(THEMES.classic.colors.accent) }}
+                style={{
+                  background: THEMES.classic.colors.accent,
+                  color: readableOn(THEMES.classic.colors.accent),
+                }}
               >
                 Send reply
               </span>
